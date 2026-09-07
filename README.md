@@ -81,6 +81,19 @@ screenshot-<slug>.png
 the markup entirely, so an unfinished case study degrades to text rather than showing a
 placeholder.
 
+### Product screenshots
+
+A case study can also declare a `screens` array of `{ file, caption }`, rendered as a
+click-to-enlarge gallery under "How it works". Files live in `public/case-studies/`, and
+`caseScreens()` drops any whose file is absent, so a wrong filename degrades to nothing.
+
+Only ORBIT uses this today. Its four screenshots come from an isolated instance running a
+re-identified copy of the production database: aggregates preserved exactly, identifiers
+replaced, so the figures are real and no named person appears. **Never screenshot the live
+portal.** See `assets-staging/README.md` for the full review of which captures were published,
+which were rejected for exposing the hostname, server spec, ports, and configuration flags,
+and how to rebuild the capture harness.
+
 ### Appreciation gallery
 
 Images in `public/recognition/` named `appreciation-1.png` … `appreciation-4.png`.

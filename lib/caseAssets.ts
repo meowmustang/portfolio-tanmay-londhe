@@ -24,3 +24,17 @@ export function caseVisual(kind: CaseVisualKind, slug: string): string | null {
   const name = `${kind}-${slug}.png`;
   return files.has(name) ? `/case-studies/${name}` : null;
 }
+
+export type CaseScreen = { file: string; caption: string };
+
+/**
+ * Filters a case study's declared UI screenshots down to the ones that actually
+ * exist in /public at build time, so a missing file is silently omitted rather
+ * than rendering a broken image.
+ */
+export function caseScreens(screens: readonly CaseScreen[] | undefined) {
+  if (!screens) return [];
+  return screens
+    .filter((s) => files.has(s.file))
+    .map((s) => ({ src: `/case-studies/${s.file}`, caption: s.caption }));
+}

@@ -1,5 +1,6 @@
 import CaseImage from "@/components/CaseImage";
-import { caseVisual } from "@/lib/caseAssets";
+import { caseVisual, caseScreens } from "@/lib/caseAssets";
+import ScreenGallery from "@/components/ScreenGallery";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { solutions, getSolution } from "@/lib/solutions";
@@ -190,6 +191,10 @@ export default async function CaseStudy({ params }: { params: Promise<{ slug: st
             src={caseVisual("workflow", s.slug)}
             alt={`${s.name} process workflow`}
             caption="Process workflow"
+          />
+          <ScreenGallery
+            screens={caseScreens(s.screens)}
+            note="Captured from an isolated instance running a re-identified copy of the database. Every aggregate is preserved exactly — 209 runs, 94,339 items, 165.9 hours — and only identifiers are replaced, so the figures are real while no named per-person productivity data is published."
           />
         </Block>
 

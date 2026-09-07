@@ -40,6 +40,9 @@ export type Solution = {
   impact: string[];
   /** 08 — One insight. */
   learned: string;
+  /** Product screenshots, rendered under "How it works". Files must sit in
+   *  public/case-studies/ or they are dropped at build time. */
+  screens?: { file: string; caption: string }[];
 };
 
 export const solutions: Solution[] = [
@@ -156,6 +159,28 @@ export const solutions: Solution[] = [
       "Error classes eliminated, not merely time saved — the reconciler surfaces a cancelled-but-paid condition the manual process had no mechanism to detect, and the extractor blocks automatic acceptance on critical fields.",
       "Every AI capability runs on the organisation's own hardware. No document, transcript, or tax figure reaches an external inference service.",
       "A seven-domain pre-go-live audit closed one critical, ten high, twenty-one medium, and thirteen low findings, each cited to a file and line before sign-off.",
+    ],
+    screens: [
+      {
+        file: "ui-orbit-1.webp",
+        caption:
+          "The dashboard a signed-in user lands on: what is available to them, what they have run, and what it gave back.",
+      },
+      {
+        file: "ui-orbit-2.webp",
+        caption:
+          "The catalogue. Every tool is visible to everyone, filterable by AI or non-AI, and each card carries its own run count and hours saved. Role governs use, not visibility.",
+      },
+      {
+        file: "ui-orbit-3.webp",
+        caption:
+          "The analytics surface. Runs, items, hours saved, active users, and success rate, filterable by tool, department, and period — the measurement that makes the programme's return stateable from data.",
+      },
+      {
+        file: "ui-orbit-4.webp",
+        caption:
+          "The audit trail. Administrative actions only, kept separate from tool runs because the two have different retention needs. Every privileged override is recorded, including break-glass access.",
+      },
     ],
     learned:
       "Build for the tenth automation and prove it with the first. A platform decision is only defensible if you can point at the moment the next build got cheaper, which means the second and third tools have to be nearly free. That is also why measurement has to be designed in: a programme that cannot state its own return will eventually be asked to justify itself with anecdote, and anecdote loses to a spreadsheet.",
