@@ -169,9 +169,21 @@ on the dark diagonal band.
 
 ### How the entrance animations work
 
-Content is **visible by default**. `globals.css` only hides it once an inline bootstrap script
-in the document head has confirmed JavaScript is running, and `components/Reveal.tsx` reveals
-it with an IntersectionObserver.
+Content is **visible by default**. `globals.css` hides it only inside
+`@media (scripting: enabled)`, and `components/Reveal.tsx` reveals it with an
+IntersectionObserver.
+
+The media query replaced an earlier trick where an inline script added a `js` class to
+`<html>`. That mutation ran before React hydrated, so the server and client class lists
+genuinely differed and React logged a hydration mismatch on every load. A media query asks
+the same question with no DOM mutation, so the mismatch is gone at the source. Browsers
+without support for the query skip the block, leaving content visible, which is the correct
+degradation.
+
+`Reveal` also reveals immediately if its element is already in or past the viewport when the
+effect runs. Without that, hydration finishing after the reader has scrolled left whole
+sections permanently blank, because an observer created at that point never fires for an
+element now above the viewport.
 
 This matters. An earlier implementation used a motion library whose initial state was
 serialised into the static HTML as `opacity: 0` on 92 elements, so with JavaScript blocked,
@@ -182,9 +194,14 @@ hydrates within three seconds.
 Keep this property. If you reintroduce a scroll animation, drive it from the `.reveal` class
 rather than an inline style.
 
-`<html>` carries `suppressHydrationWarning` because that bootstrap script adds a class before
-React hydrates. It covers that element's own attributes only and does not extend into the
-tree, so genuine mismatches below it still surface.
+`<html>` still carries `suppressHydrationWarning`, now only as insurance against browser
+extensions that rewrite `<html>` before React loads, which is a common false-positive source.
+It covers that element's own attributes only and does not extend into the tree, so genuine
+mismatches below it still surface.
+
+The remaining inline script does one thing: after three seconds, if React has not hydrated,
+it adds `reveal-failsafe` to force every reveal visible. Three seconds is well past normal
+hydration, so it never mutates `<html>` while React is reconciling.
 
 ## Layout audit
 
@@ -198,6 +215,24 @@ Drives a local Chrome or Edge across mobile, tablet, and desktop viewports and r
 horizontal overflow with the offending elements, content still hidden after a full scroll, tap
 targets under 24×24 CSS px, images missing `alt`, and `h1` count. Full-page screenshots land
 in `audit-shots/` (gitignored). Set `CHROME_PATH` if the browser is not auto-detected.
+
+## Reveal audit
+
+```bash
+npm run build
+cd out && python -m http.server 8899
+npm run audit:reveal http://localhost:8899/        # in another shell
+```
+
+Checks the three states that matter: scripting on with motion allowed (below-fold content
+starts hidden, then becomes visible on scroll), scripting on with reduced motion (everything
+visible immediately), and scripting off (everything visible). It also asserts that nothing
+adds a class to `<html>` before hydration.
+
+**Headless Chrome reports `prefers-reduced-motion: reduce` by default.** Both this script and
+the layout audit emulate `no-preference` explicitly. Without that the reduced-motion rule
+forces everything visible and the checks pass while testing nothing, which is exactly how the
+late-hydration blank-section bug survived several audit runs.
 
 ## Console audit
 

@@ -34,6 +34,15 @@ export default function Reveal({
       return;
     }
 
+    // Already in view, or already scrolled past, by the time this effect runs.
+    // Hydration can finish after the reader has scrolled, and an observer
+    // created at that point never fires for an element now above the viewport,
+    // which left whole sections permanently blank. Reveal those immediately.
+    if (el.getBoundingClientRect().top < window.innerHeight) {
+      setVisible(true);
+      return;
+    }
+
     const io = new IntersectionObserver(
       (entries) => {
         if (entries.some((e) => e.isIntersecting)) {

@@ -45,6 +45,12 @@ for (const vp of viewports) {
       deviceScaleFactor: vp.dsf,
       isMobile: vp.name === "mobile",
     });
+    // Headless Chrome reports prefers-reduced-motion: reduce by default, which
+    // forces every reveal visible and made the stuck-content check pass
+    // trivially. Emulate a normal browser so the check tests something.
+    await page.emulateMediaFeatures([
+      { name: "prefers-reduced-motion", value: "no-preference" },
+    ]);
     await page.goto(BASE + pg.url, { waitUntil: "networkidle0" });
     // Scroll through so every IntersectionObserver reveal fires.
     await page.evaluate(async () => {

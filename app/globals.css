@@ -210,24 +210,32 @@ body {
 .reveal,
 .enter { opacity: 1; }
 
-.js .reveal {
-  opacity: 0;
-  transform: translateY(var(--reveal-y, 24px));
-  transition:
-    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0s),
-    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0s);
-  will-change: opacity, transform;
-}
-.js .reveal[data-visible="true"] {
-  opacity: 1;
-  transform: none;
-  will-change: auto;
-}
+/* `scripting: enabled` replaces the old trick of having an inline script add a
+   `js` class to <html>. That mutation happened before React hydrated, so the
+   server and client class lists genuinely differed and React logged a
+   hydration mismatch. A media query asks the same question with no DOM
+   mutation at all. Browsers without support simply skip the block, leaving
+   content visible, which is the correct degradation. */
+@media (scripting: enabled) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(var(--reveal-y, 24px));
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0s),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0s);
+    will-change: opacity, transform;
+  }
+  .reveal[data-visible="true"] {
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+  }
 
-/* Pure CSS, so above-the-fold content appears without waiting for React. */
-.js .enter {
-  animation: enter-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: var(--enter-delay, 0s);
+  /* Pure CSS, so above-the-fold content appears without waiting for React. */
+  .enter {
+    animation: enter-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: var(--enter-delay, 0s);
+  }
 }
 @keyframes enter-up {
   from { opacity: 0; transform: translateY(22px); }
@@ -241,8 +249,8 @@ html.reveal-failsafe .reveal {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .js .reveal { opacity: 1; transform: none; transition: none; }
-  .js .enter { animation: none; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .enter { animation: none; }
 }
 
 /* --- Nav, mobile sheet, lightbox -----------------------------------------

@@ -98,19 +98,22 @@ const personSchema = {
   ],
 };
 
-/* Runs before first paint. Adds `js` so CSS may hide-then-reveal content, and
-   arms a failsafe that forces everything visible if React never hydrates. */
+/* Arms a failsafe that forces every reveal visible if React never hydrates.
+   The timer fires at 3s, long after hydration would normally finish, so this
+   never mutates <html> while React is reconciling it. Whether to animate at
+   all is decided in CSS by `@media (scripting: enabled)`, not by a class. */
 const bootstrap =
-  "document.documentElement.classList.add('js');" +
   "setTimeout(function(){var d=document.documentElement;" +
   "if(!d.classList.contains('hydrated'))d.classList.add('reveal-failsafe');},3000);";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    /* The bootstrap script below adds `js` to this element before React hydrates,
-       so the class list legitimately differs from what the server rendered.
-       suppressHydrationWarning covers this element's own attributes only — it does
-       not extend to descendants, so real mismatches inside the tree still surface. */
+    /* Nothing mutates this element before hydration any more, so the mismatch
+       this used to cause is gone at the source. suppressHydrationWarning is kept
+       only as insurance against browser extensions that rewrite <html> before
+       React loads, a common source of false positives. It covers this element's
+       own attributes and does not extend to descendants, so real mismatches
+       inside the tree still surface. */
     <html
       lang="en"
       className={`${inter.variable} ${spaceGrotesk.variable} ${manrope.variable}`}
