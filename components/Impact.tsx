@@ -10,7 +10,7 @@ export default function Impact() {
       <div className="wrap">
         <SectionHeading
           eyebrow="Impact"
-          title="What the work returned"
+          title="What the work has returned"
           lede="Outcomes, not output. Every figure below is totalled from the delivery tracker, per automation, from real annual volumes and measured minutes saved per unit."
         />
 

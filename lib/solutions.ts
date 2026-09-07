@@ -1,29 +1,45 @@
+/**
+ * Case studies, each following the same eight-section narrative:
+ * problem → existing process → opportunity → solution → how it works →
+ * my role → impact → what I learned.
+ *
+ * Hours and volumes trace to the internal delivery tracker mirrored in
+ * lib/portfolio.ts. Where a figure is not measured, the text says so.
+ */
 export type Solution = {
   slug: string;
   name: string;
   category: string;
   status: string;
+  /** Business functions served. */
   functions: string;
   tagline: string;
-  summary: string;
-  focus: string[];
-  problem: string;
-  context: string[];
-  challenges: string[];
-  architecture: string[];
-  stack: string[];
-  journey: string[];
-  impact: string[];
-  lessons: string[];
-  future: string[];
-  /** Renders with flagship treatment on the homepage grid. */
+  /** Renders with flagship treatment on the homepage. */
   featured?: boolean;
-  /** What I owned on this project. */
+  /** One-line summary of ownership, for the case study header. */
   role: string;
-  /** Rough delivery window, for narrative sequencing. */
   timeline: string;
-  /** 3-4 scannable outcomes shown as a strip at the top of the case study. */
+  /** Three or four scannable outcomes, shown above the narrative. */
   headlineMetrics: { value: string; label: string }[];
+  focus: string[];
+  stack: string[];
+
+  /** 01 — What was inefficient, manual, expensive, slow or error-prone. */
+  problem: string;
+  /** 02 — How the work was done before. */
+  existingProcess: string[];
+  /** 03 — Why this process suited AI or automation. */
+  opportunity: string[];
+  /** 04 — What was built. */
+  solution: string;
+  /** 05 — Workflow and architecture. */
+  howItWorks: string[];
+  /** 06 — Explicit contribution, by area. */
+  myRole: { area: string; detail: string }[];
+  /** 07 — Concrete outcomes. */
+  impact: string[];
+  /** 08 — One insight. */
+  learned: string;
 };
 
 export const solutions: Solution[] = [
@@ -38,15 +54,25 @@ export const solutions: Solution[] = [
     timeline: "Jun – Sep 2026 · pilot live",
     tagline:
       "The platform that turned a drawer of desktop scripts into a governed, measured, self-service automation estate.",
-    summary:
-      "An on-premise web platform that consolidates an enterprise's finance, tax, and operations automations into one authenticated portal. It replaces scripts and packaged executables — each owned by one person on one machine — with self-service tools behind single sign-on, governed by role-based access, per-object ownership checks, a non-erasable audit trail, and usage instrumentation that reports work completed and manual effort removed per tool, per person, and per department. Six applications carrying 58,908 lines of Python and 806 automated tests at the September 2026 measurement, with a seventh since deployed.",
     focus: [
       "Platform strategy",
       "AI governance",
       "Privacy by construction",
-      "Access control & audit design",
+      "Access control & audit",
       "Impact instrumentation",
       "Enterprise architecture",
+    ],
+    stack: [
+      "Python",
+      "Flask",
+      "Jinja2",
+      "SQLite (WAL)",
+      "Microsoft Entra ID / OIDC",
+      "PaddleOCR",
+      "WhisperX",
+      "Ollama (local LLM)",
+      "Plotly",
+      "IIS reverse proxy",
     ],
     headlineMetrics: [
       { value: "165.9 hrs", label: "manual effort removed during the pilot window" },
@@ -55,497 +81,682 @@ export const solutions: Solution[] = [
       { value: "806", label: "automated tests across 40 suites" },
     ],
     problem:
-      "The automation portfolio had become its own bottleneck. Every win — a reconciliation bot, an OCR extractor, a report distributor — shipped as a desktop script or a packaged executable that lived on one person's machine. Nobody could see what existed, request access, or run a tool without finding its owner. Nothing was instrumented, so the single question leadership actually asked, 'what has this programme returned to the business,' could only be answered by anecdote. Meanwhile the next automation cost as much to build as the last one, because nothing was shared.",
-    context: [
-      "The recurring pattern across every function was high-volume repetitive document work where each individual task was too small to justify a bespoke system — which is precisely why none had been built.",
-      "The measurable case that opened the analysis was tax certificate data entry: a clerk reading ten fields off a PDF and re-keying them into a spreadsheet bound for the ERP.",
-      "That effort figure was derived rather than estimated — 2,549 certificates across a 76-day production window worked out to roughly 1.47 minutes per certificate, or about 300 hours a year on one task.",
-      "Twelve stakeholder functions had a claim on the outcome, from receivables and direct tax through payments, cost control, and retail relations to infrastructure, identity, information security, and internal audit.",
+      "The automation portfolio had become its own bottleneck. Every win shipped as a desktop script or a packaged executable living on one person's machine. Nobody could see what existed, request access, or run anything without finding its owner. Nothing was instrumented, so the one question leadership actually asked — what has this programme returned to the business — could only be answered by anecdote. Worse, the next automation cost as much to build as the last one, because nothing was shared.",
+    existingProcess: [
+      "A tool was a file. You got it by asking the person who wrote it, and you ran it on your own machine with your own credentials.",
+      "There was no catalogue, so discovering that a tool already existed depended on hearing about it.",
+      "There was no access model. Whoever had the file had the capability, and nothing recorded who ran what.",
+      "Impact was reported by asking the builder for an estimate, which is not a measurement.",
     ],
-    challenges: [
-      "The strategic choice: deliver a single-purpose tool that solved the tax problem, or build a platform that lowered the cost of every automation after it. I chose the platform and validated it with the tax case as its first tenant.",
-      "Proving business impact without overstating it — which meant designing measurement into the product rather than reporting on it afterwards, and being rigorous about which numbers were measured versus estimated.",
-      "Delivering enterprise-grade access control with no local credential store at all, so the platform never becomes a place where passwords can leak.",
-      "Keeping every AI capability on-premise under a hard no-data-egress requirement, while still using modern speech and language models.",
-      "Real institutional constraints: a managed Windows host with no container runtime, no staging environment, and package installations declined twice — the rate limiter ended up hand-written in about ninety lines.",
-      "A seven-domain pre-go-live audit that I commissioned against my own work, then remediated in full before requesting external penetration testing.",
+    opportunity: [
+      "The binding constraint was not any single process, it was the marginal cost of the next automation. Solving that once compounds across every build after it.",
+      "Measurement could be a property of the platform rather than a reporting exercise laid over it, which is the only way it stays accurate.",
+      "Three of the existing tools were self-contained engines that could be lifted in behind a thin wrapper, so the platform thesis was testable rather than theoretical.",
+      "A hard no-data-egress requirement made on-premise AI inference the only route, which turned a constraint into a defensible design position.",
     ],
-    architecture: [
-      "Shared contract — a real installed Python package of thirteen modules covering identity, background jobs, usage tracking, audit writing, alerting, rate limiting, redaction, security headers, and serving. A tool owns its business logic and its screens; it owns nothing else. A security fix therefore applies to every application at once.",
-      "Process isolation over multi-tenancy — one operating-system process and one virtual environment per tool, so a four-minute optical character recognition run, a ninety-thousand-row tax computation, and a voucher issue execute independently and pin their own dependency versions without constraining each other.",
-      "Identity — enterprise single sign-on over the OpenID Connect authorization-code flow, so the organisation's own multi-factor and conditional-access policies apply. The platform holds no credential and has no registration or password-reset path; the column that would have stored a password hash was deliberately dropped by a migration so it cannot later be wired up.",
+    solution:
+      "An on-premise web platform that consolidates an enterprise's finance, tax, and operations automations into one authenticated portal. It replaces scripts and packaged executables with self-service tools behind single sign-on, governed by role-based access, per-object ownership checks, a non-erasable audit trail, and usage instrumentation that reports work completed and manual effort removed per tool, per person, and per department. Six applications carrying 58,908 lines of Python and 806 automated tests at the September 2026 measurement, with a seventh since deployed.",
+    howItWorks: [
+      "Shared contract — a real installed Python package of thirteen modules covering identity, background jobs, usage tracking, audit writing, alerting, rate limiting, redaction, and serving. A tool owns its business logic and its screens; it owns nothing else, so a security fix applies to every application at once.",
+      "Process isolation over multi-tenancy — one operating-system process and one virtual environment per tool, so a four-minute OCR run, a ninety-thousand-row tax computation, and a voucher issue execute independently and pin their own dependency versions.",
+      "Identity — enterprise single sign-on over the OpenID Connect authorization-code flow, so the organisation's own multi-factor and conditional-access policies apply. The platform holds no credential; the column that would have stored a password hash was dropped by a migration so it cannot later be wired up.",
       "Authorisation in layers — a three-tier role rank, then a per-tool assignment gate, then an object-level ownership check re-evaluated on every fetch. A revocation point means a demotion takes effect on the subject's next request rather than their next sign-in.",
-      "Measurement as a first-class concern — every run writes to a usage log carrying the effort-saved multiplier at execution time, so correcting a catalogue value never rewrites history. Unattended scheduled work is projected into the same log under a reserved non-human actor whose rows count toward work completed but never toward headcount.",
-      "Executive reporting as a product surface — a weekly update view built for an audience that will not open analytics filters, with totals summed live from the underlying rows so the number in front of management cannot drift from the data.",
-      "Demand-side governance — an innovation hub where any authenticated user can submit and vote on automation ideas, with one vote per person enforced by the database key rather than by the interface.",
-      "Extensibility as the design goal — adding a tool is a template copy plus a single catalogue row. No portal code change, no restart, because the catalogue is read fresh on every request. The seventh application was added to the running platform this way, and the portal source does not mention it anywhere.",
+      "Measurement as a first-class concern — every run writes to a usage log carrying the effort-saved multiplier at execution time, so correcting a catalogue value never rewrites history. Scheduled work is projected into the same log under a reserved non-human actor whose rows count toward work completed but never toward headcount.",
+      "Executive reporting as a product surface — a weekly update view for an audience that will not open analytics filters, with totals summed live from the underlying rows so the number in front of management cannot drift from the data.",
+      "Extensibility as the design goal — adding a tool is a template copy plus a single catalogue row. No portal code change, no restart. The seventh application was added to the running platform this way, and the portal source does not reference it anywhere.",
+      "The local model stack carries a provenance inventory: every speech, alignment, diarisation, and language model recorded with its source, its licence, and its SHA-256 hash.",
     ],
-    stack: [
-      "Python",
-      "Flask",
-      "Jinja2",
-      "Waitress",
-      "SQLite (WAL)",
-      "Microsoft Entra ID / OIDC",
-      "PaddleOCR",
-      "WhisperX",
-      "Ollama (local LLM)",
-      "Plotly",
-      "IIS reverse proxy",
-      "Windows services",
-    ],
-    journey: [
-      "The original brief specified a lightweight dashboard framework with a local username-and-password table. I rejected both: what shipped runs on enterprise single sign-on with no credential store, because the security posture the organisation actually needed made the simpler design untenable.",
-      "A design prototype was built in a modern component framework, then hand-ported to plain server-rendered templates and hand-written CSS — deliberately, to keep a front-end build step off a restricted production server.",
-      "The platform contract was proven by absorbing existing work: three of the six tools are pre-existing engines lifted in unmodified behind a thin wrapper, which is the clearest evidence that the marginal cost of the next automation actually fell.",
-      "The hardest integration was a complete standalone voucher application with its own sign-in, roles, and mailer. Rather than rewrite it, I deleted its authentication and retained its authorisation — its seven-role, seventeen-screen permission grid survived intact, still administered by the business rather than by IT.",
-      "Four tools entered production in a single week, followed by a pre-go-live audit across seven domains that closed one critical, ten high, twenty-one medium, and thirteen low findings — every one cited to a file and line before it was signed off.",
-      "The critical finding was mine to begin with: job routes gated by role but not by ownership, so one user could retrieve another's documents. Fixed across all affected routes and locked down with eighteen regression tests. It is recorded as self-inflicted rather than quietly corrected.",
-      "Currently pre-general-release pending external penetration testing, for which I prepared the full scoping pack — targets, authentication model, endpoint inventory, known findings, and rules of engagement.",
+    myRole: [
+      {
+        area: "Process discovery",
+        detail:
+          "Analysed the recurring pattern across twelve stakeholder functions and derived the effort baseline from a real production window rather than estimating it.",
+      },
+      {
+        area: "Solution design",
+        detail:
+          "Made the platform-versus-point-solution call, and chose to validate the platform with the tax case as its first tenant rather than arguing it in the abstract.",
+      },
+      {
+        area: "Architecture",
+        detail:
+          "Designed the shared contract, the process-isolation model, the layered authorisation, and the instrumentation schema.",
+      },
+      {
+        area: "AI implementation",
+        detail:
+          "Built the on-premise inference path and the build-time test that fails the build if a hosted endpoint appears anywhere in the codebase.",
+      },
+      {
+        area: "Integration",
+        detail:
+          "Absorbed a complete standalone application by removing its authentication and retaining its authorisation grid, leaving its models and templates unmodified.",
+      },
+      {
+        area: "Security & audit",
+        detail:
+          "Commissioned a seven-domain pre-go-live audit against my own work, remediated every finding, and prepared the external penetration-test scoping pack.",
+      },
+      {
+        area: "Deployment",
+        detail:
+          "Took six applications into production on a managed host with service supervision, backups, retention automation, and verified restart behaviour.",
+      },
+      {
+        area: "Stakeholder management",
+        detail:
+          "Ran the programme across finance, tax, payments, cost control, retail, infrastructure, identity, information security, and internal audit.",
+      },
     ],
     impact: [
       "165.9 hours of manual effort removed and 94,339 items processed across 209 recorded runs during the pilot window, with zero recorded run failures and 195 privileged actions audited.",
-      "One three-minute run replaced two to three days of manual cross-verification on a 90,197-row tax computation — the single clearest demonstration of the scale change.",
-      "Across the wider automation portfolio the platform now reports on, roughly 3,741 hours of manual work a year is removed — about 2.08 full-time equivalents at the stated 1,800 productive hours per person — spanning nineteen automations in eleven departments.",
-      "Leadership can answer 'what has this programme returned' from live data rather than anecdote, because measurement is a property of the platform rather than a reporting exercise laid over it.",
-      "The marginal cost of the next automation fell measurably, and it is demonstrated rather than claimed: the seventh application joined a live platform through a template copy and one catalogue row, with not a single reference to it anywhere in the portal source.",
-      "Error classes eliminated, not merely time saved — the reconciler surfaces a 'cancelled but paid' condition the manual process had no mechanism to detect, and the extractor blocks automatic acceptance on critical fields with duplicate and mismatch detection that prevents a credit being applied twice or against the wrong ledger.",
-      "Every AI capability runs on the organisation's own hardware. No document, transcript, or tax figure reaches an external inference service, verified by a build-time test that fails the build if a hosted endpoint ever appears in the codebase.",
-      "The local model stack carries a provenance inventory: every speech, alignment, diarisation, and language model recorded with its source, its licence, and its SHA-256 hash. Most internal AI projects cannot say where their weights came from or prove they have not changed.",
+      "One three-minute run replaced two to three days of manual cross-verification on a 90,197-row tax computation, which is the clearest single demonstration of the scale change.",
+      "Leadership can answer what the programme has returned from live data rather than anecdote, because measurement is a property of the platform.",
+      "The marginal cost of the next automation fell measurably, and it is demonstrated rather than claimed: the seventh application joined a live platform through a template copy and one catalogue row.",
+      "Error classes eliminated, not merely time saved — the reconciler surfaces a cancelled-but-paid condition the manual process had no mechanism to detect, and the extractor blocks automatic acceptance on critical fields.",
+      "Every AI capability runs on the organisation's own hardware. No document, transcript, or tax figure reaches an external inference service.",
+      "A seven-domain pre-go-live audit closed one critical, ten high, twenty-one medium, and thirteen low findings, each cited to a file and line before sign-off.",
     ],
-    lessons: [
-      "Build for the tenth automation, prove it with the first. The platform decision is only defensible if you can point at the moment the next build got cheaper — and for that, you need the second and third tools to be nearly free.",
-      "Design the measurement before the feature. A programme that cannot state its own return will eventually be asked to justify itself with anecdote, and anecdote loses to a spreadsheet.",
-      "Be precise about which numbers are measured and which are estimated. Deriving the effort figure from a real 76-day production window, and labelling the estimated multipliers as estimates, is what makes the credible numbers credible.",
-      "Authorisation questions that the business owns should stay with the business. 'May open the issue counter' is not a fact a platform can hold, which is why that permission grid is administered by the voucher administrator and not by IT.",
-      "Audit your own work before someone else does, and record the findings that were your fault as your fault. It costs nothing and it is the entire basis of the trust that follows.",
-      "Privacy is easier as a constraint than as a retrofit. Committing to on-premise inference up front closed off an entire category of later compliance argument.",
-    ],
-    future: [
-      "Onboarding the automations that still run outside the platform — the highest available return in the portfolio, and onboarding rather than new development.",
-      "Generalising the business-administered permission grid into the shared contract so any tool can offer finer-grained, business-owned authorisation.",
-      "Replacing the estimated effort-saved multipliers with measured values, and adding cohort, trend, and per-department drill-down to the analytics surface.",
-      "Rebuilding the document extractor as an agent able to reason about layouts it has not seen before, moving from a fixed pipeline with human review to a system that handles the unfamiliar — on the on-premise inference path, never a cloud API.",
-    ],
-  },
-  {
-    slug: "fundflow-agent",
-    role: "Sole owner — discovery to production",
-    timeline: "Multi-phase · live",
-    headlineMetrics: [
-      { value: "10", label: "institution formats parsed" },
-      { value: "0", label: "extraction errors in validated runs" },
-      { value: "100%", label: "on-premise processing" },
-      { value: "Daily", label: "unattended runs" }
-    ],
-    name: "FundFlow Agent",
-    category: "AI + Finance Automation",
-    status: "Live in production",
-    functions: "Finance",
-    tagline: "Automated mutual fund statement processing — from inbox to validated report, unattended.",
-    summary:
-      "An end-to-end pipeline that requests statements, collects PDFs, extracts folio-level data with OCR and format-aware parsing, and produces validated Excel reports — with an AI fallback for layouts rules can't read and 100% local, privacy-first processing.",
-    focus: ["Automation architecture", "Document intelligence", "Error handling", "Privacy-first design", "Scalability"],
-    problem:
-      "The finance team spent hours every day requesting mutual fund statements, hunting for PDFs scattered across email threads, and manually keying investment and market values into spreadsheets. Every folio lived in a differently formatted document, so manual extraction was slow and error-prone — on records that had to be right.",
-    context: [
-      "Statements arrived from multiple asset management companies, each with its own PDF layout, password conventions, and multi-page structures.",
-      "The routine consumed a significant share of the team's productive day, yet produced no analysis — only data movement.",
-      "The data feeds treasury visibility, so accuracy and auditability mattered as much as speed.",
-    ],
-    challenges: [
-      "No standardized statement format — ten distinct institution layouts plus edge cases like multi-scheme folios and statements spanning pages.",
-      "Password-protected PDFs and documents scattered across mail threads and folders.",
-      "Strict confidentiality requirements ruled out any external API or cloud OCR service.",
-      "Packaged executables triggering antivirus false positives, and enterprise file-storage access quirks.",
-    ],
-    architecture: [
-      "Orchestration layer — scheduled workflows request statements from institutions, receive replies, and file PDFs into an organized per-institution folder structure automatically.",
-      "Scheduling & monitoring layer — a daily trigger runs the extractor, tracks status, and logs errors centrally.",
-      "Extraction engine — a Python executable (callable from CLI or Excel) that auto-identifies folios and extracts invested value, market value, and gain/loss, attaching a confidence score and a source flag showing whether rules or the AI fallback produced each value.",
-      "Format-specific parsing engines for ten institution layouts, a generic heuristic parser for unknown formats, and a locally hosted LLM fallback as a strictly validated safety net.",
-      "Structured error states (e.g. folio not found, zero balance) and a daily run-summary email forming a complete audit trail.",
-    ],
-    stack: ["Power Automate", "Python", "PaddleOCR", "Regex parsing engines", "Local LLM fallback", "Excel / VBA", "Task Scheduler"],
-    journey: [
-      "v1 shipped as a generic parser — it worked, but broke on institution-specific layouts and multi-scheme statements.",
-      "v2 introduced format-specific extraction engines per institution, fixing multi-scheme and multi-page edge cases with an asymmetric folio-window technique.",
-      "Later versions added the local LLM fallback, confidence scoring, batch folder mode, password handling, and hardened packaging.",
-      "Rolled out in phases with user acceptance testing at each stage; now in daily production with the next phase extending native Excel integration.",
-    ],
-    impact: [
-      "Multiple hours of manual effort removed from the finance team's day, every day.",
-      "Zero extraction errors across validated production runs, stress-tested against large multi-folio datasets.",
-      "Unlimited folio scalability — adding coverage is configuration, not new manual work.",
-      "Complete audit trail through daily run summaries, confidence scores, and source flags.",
-      "100% local processing — no sensitive financial document ever leaves the organization's environment.",
-    ],
-    lessons: [
-      "Deterministic rules should do the heavy lifting; AI belongs as a validated safety net, not the first line.",
-      "Phased, UAT-driven rollout de-risks adoption and builds stakeholder trust faster than a big-bang launch.",
-      "Privacy-first architecture is a feature stakeholders actively value — design for it from day one.",
-    ],
-    future: [
-      "Native Excel integration so users trigger extraction from the tools they already live in.",
-      "Extending format coverage and evolving the fallback layer toward agent-style self-correction.",
-    ],
+    learned:
+      "Build for the tenth automation and prove it with the first. A platform decision is only defensible if you can point at the moment the next build got cheaper, which means the second and third tools have to be nearly free. That is also why measurement has to be designed in: a programme that cannot state its own return will eventually be asked to justify itself with anecdote, and anecdote loses to a spreadsheet.",
   },
   {
     slug: "tds-flow-engine",
-    role: "Sole owner — discovery to production",
-    timeline: "Quarterly cycle · live",
-    headlineMetrics: [
-      { value: "~2 wks → <1 day", label: "quarterly issuance cycle" },
-      { value: "90–95%", label: "effort reduction" },
-      { value: "1,000s", label: "certificates per quarter" },
-      { value: "Zero", label: "third-party exposure" }
-    ],
     name: "TDS Flow Engine",
     category: "Workflow Automation",
     status: "Live in production",
     functions: "Direct Tax",
-    tagline: "Bulk, secure issuance of quarterly tax certificates — thousands of documents, one supervised run.",
-    summary:
-      "An in-house, end-to-end distribution workflow that renames, encrypts, and dispatches thousands of confidential tax certificates each quarter through controlled channels — with delivery tracking, error logging, and no third-party software in the loop.",
-    focus: ["Business process transformation", "Security by design", "Workflow design", "Operational efficiency"],
-    problem:
-      "Every quarter, the direct tax team manually issued thousands of tax certificates to vendors. Each PDF had to be individually renamed, password-protected, and emailed — thousands of repetitive, high-stakes actions with real misdelivery risk on confidential financial documents.",
-    context: [
-      "The process consumed roughly two working weeks of effort each quarter.",
-      "The documents are confidential, which made the team firmly reluctant to route them through third-party tools.",
-      "Delivery had to be traceable: which certificate went where, when, and what failed.",
-    ],
-    challenges: [
-      "Scale — thousands of PDFs processed and dispatched in a single quarterly run.",
-      "Reliable per-document encryption and password-protected archive handling at volume.",
-      "Building delivery-status tracking and error logging so the run is fully auditable.",
-      "Coordinating debugging and validation with the business user before the first live run.",
-    ],
-    architecture: [
-      "Ingestion — reads certificate files from designated folders and logs each record into a structured Excel register.",
-      "Preparation engine — automated renaming to vendor conventions and per-document password protection, including zipped password-protected archives where required.",
-      "Dispatch layer — bulk, controlled email distribution through the corporate mail environment with per-recipient tracking.",
-      "Audit layer — delivery status, failures, and exceptions logged for review; simple operator interface for the tax team.",
+    role: "Sole owner — discovery to production",
+    timeline: "Quarterly cycle · live",
+    tagline:
+      "A repetitive quarterly tax certificate ritual turned into a controlled, scalable batch workflow.",
+    focus: [
+      "Process transformation",
+      "Security by design",
+      "Workflow design",
+      "Vendor replacement",
+      "Operational efficiency",
     ],
     stack: ["Excel VBA", "Power Automate", "Outlook", "PDF encryption tooling"],
-    journey: [
-      "Started as a gap identified in conversation with the tax team: a quarterly ritual everyone assumed had to be manual.",
-      "Built and debugged in close coordination with the business user; validated on controlled batches before scale-up.",
-      "First live run issued thousands of protected certificates; subsequent quarters exceeded the original volume target.",
+    headlineMetrics: [
+      { value: "1,300 hrs", label: "of manual work removed per year" },
+      { value: "26,000", label: "certificates issued a year" },
+      { value: "~2 wks → <1 day", label: "quarterly issuance cycle" },
+      { value: "Vendor", label: "dependency removed entirely" },
+    ],
+    problem:
+      "Every quarter the direct tax team issued roughly 6,500 tax certificates to vendors by hand. Each document had to be individually renamed to a vendor convention, password-protected, attached, and emailed. That is thousands of repetitive, high-stakes actions on confidential financial documents, with a real risk of a certificate reaching the wrong party, and it consumed about two working weeks of the team's quarter.",
+    existingProcess: [
+      "A certificate was generated, then renamed by hand to the vendor naming convention.",
+      "Each PDF was individually password-protected, and some had to be delivered as password-protected archives.",
+      "Each was attached to an email and sent one recipient at a time.",
+      "There was no delivery register, so answering which certificate went where, and when, meant searching a mailbox.",
+      "The alternative on offer was an external vendor, which carried both a cost and a confidentiality question.",
+    ],
+    opportunity: [
+      "The task was high-volume and entirely rule-governed. Nothing in it required a person to decide anything, which makes it a clean automation candidate rather than an AI one.",
+      "The real risk was misdelivery rather than misjudgement, and misdelivery risk can be encoded as controls: naming derived from the record, per-document encryption, and a delivery log.",
+      "Confidentiality ruled out third-party tooling, so building in-house was not just cheaper, it was the only acceptable route.",
+      "The volume made the payback obvious before a line was written: 26,000 documents a year at roughly three minutes each.",
+    ],
+    solution:
+      "An in-house, end-to-end distribution workflow that renames, encrypts, and dispatches thousands of confidential tax certificates each quarter through controlled channels, with per-recipient delivery tracking, error logging, and no third-party software anywhere in the path.",
+    howItWorks: [
+      "Ingestion — reads certificate files from designated folders and logs each record into a structured register that becomes the audit trail.",
+      "Preparation engine — automated renaming to the vendor convention and per-document password protection, including password-protected archives where the recipient requires them.",
+      "Dispatch layer — bulk, controlled distribution through the corporate mail environment, with per-recipient tracking rather than a single blind send.",
+      "Audit layer — delivery status, failures, and exceptions logged for review, behind a simple operator interface the tax team runs themselves.",
+      "Validation discipline — built and debugged alongside the business user, and proved on controlled batches before the first live quarter.",
+    ],
+    myRole: [
+      {
+        area: "Process discovery",
+        detail:
+          "Found this in conversation with the tax team. It was a quarterly ritual everyone had assumed was inherently manual.",
+      },
+      {
+        area: "Requirements gathering",
+        detail:
+          "Worked through the naming conventions, the encryption rules, and the archive cases directly with the person who ran the process.",
+      },
+      {
+        area: "Solution design",
+        detail: "Designed the ingest, prepare, dispatch, and audit stages and the register that ties them together.",
+      },
+      { area: "Automation", detail: "Built the renaming, encryption, and bulk dispatch engine." },
+      { area: "Testing & UAT", detail: "Validated on controlled batches with the business user before any live run." },
+      { area: "Deployment", detail: "Took it into the live quarterly cycle and supported the first supervised runs." },
+      {
+        area: "Stakeholder management",
+        detail:
+          "Secured tax-team confidence on a confidential document flow, and reported the outcome to senior management.",
+      },
     ],
     impact: [
-      "Roughly 90–95% effort reduction — from about two weeks of manual work to under a day of supervised monitoring.",
-      "Multiple person-weeks returned to the tax team every quarter.",
-      "Thousands of certificates issued per quarter with delivery tracking and zero third-party exposure.",
-      "Eliminated external tool costs entirely; formally appreciated by the tax team and endorsed by senior management.",
+      "1,300 hours of manual work removed per year, from roughly 26,000 certificates at about three minutes each.",
+      "The quarterly cycle went from about two weeks of manual effort to under a day of supervised monitoring, a reduction of roughly 90 to 95 percent.",
+      "Multiple person-weeks returned to the tax team every quarter, redirected onto assessment and advisory work.",
+      "Delivery tracking and per-document encryption removed the misdelivery exposure that the manual process carried.",
+      "External vendor dependency and its cost eliminated, with the statutory deadline met in-house.",
+      "Formally appreciated by the direct tax team and endorsed by senior management.",
     ],
-    lessons: [
-      "Early flagship wins establish credibility — this project created the mandate to find gaps and build solutions across functions.",
-      "Pragmatic tooling beats exotic tooling: the right combination of familiar components shipped faster and was easier to trust.",
-      "Security-by-design became the standard carried into every later system.",
+    learned:
+      "Early flagship wins buy the mandate for everything after them. This project is why I was subsequently able to go looking for gaps across other functions rather than waiting to be assigned one. It also set the security-by-design default that every later system inherited.",
+  },
+  {
+    slug: "fundflow-agent",
+    name: "FundFlow Agent",
+    category: "AI + Finance Automation",
+    status: "Live in production",
+    functions: "Finance",
+    role: "Sole owner — discovery to production",
+    timeline: "Multi-phase · live daily",
+    tagline:
+      "An AI-enabled workflow that takes mutual fund statements from request to validated report without a person in the loop.",
+    focus: [
+      "AI document extraction",
+      "Workflow orchestration",
+      "Privacy-first design",
+      "Error handling",
+      "Confidence scoring",
     ],
-    future: [
-      "Paired with the inbound certificate OCR platform, this now forms a complete document lifecycle — issuance out, intelligent capture in.",
+    stack: [
+      "Power Automate",
+      "Python",
+      "PaddleOCR",
+      "Regex parsing engines",
+      "Local LLM fallback",
+      "Excel / VBA",
+      "Task Scheduler",
     ],
+    headlineMetrics: [
+      { value: "375 hrs", label: "of manual work removed per year" },
+      { value: "10", label: "institution layouts parsed" },
+      { value: "Zero", label: "extraction errors in validated runs" },
+      { value: "100%", label: "on-premise processing" },
+    ],
+    problem:
+      "The finance team spent about ninety minutes of every working day requesting mutual fund statements, hunting for PDF attachments scattered across email threads, and keying investment and market values into a spreadsheet. Every folio arrived in a differently formatted document, so extraction was slow and error-prone, on records that feed treasury visibility and therefore have to be right.",
+    existingProcess: [
+      "Someone emailed each asset management company to request the day's statements.",
+      "Replies arrived across the day and had to be found among ordinary mail traffic, with the attachment opened using that institution's own password convention.",
+      "Invested value, market value, and gain or loss were read off each statement and typed into a spreadsheet.",
+      "Ten institutions meant ten layouts, plus edge cases like multi-scheme folios and statements spanning pages.",
+      "The routine consumed a meaningful share of the productive day and produced no analysis, only data movement.",
+    ],
+    opportunity: [
+      "The request-and-collect half of the process was pure orchestration with no judgement in it, so it could be automated outright.",
+      "The extraction half was rule-governed per layout, but no rule set survives an unfamiliar layout. That gap is precisely where a language model earns its place, as a fallback rather than the primary path.",
+      "Because the output feeds treasury records, every extracted value needed provenance: which engine produced it and how confident it was.",
+      "Confidentiality ruled out cloud OCR and hosted AI entirely, which made local inference the only viable design.",
+    ],
+    solution:
+      "An end-to-end pipeline that requests statements, collects the PDFs, extracts folio-level data with OCR and format-aware parsing, and produces validated Excel reports. Deterministic engines handle the ten known institution layouts. A locally hosted language model handles layouts the rules cannot read, behind the same strict validation. Every value carries a confidence score and a source flag showing whether rules or the AI fallback produced it.",
+    howItWorks: [
+      "Orchestration layer — scheduled workflows request statements from institutions, receive the replies, and file the PDFs into an organised per-institution folder structure automatically.",
+      "Scheduling and monitoring — a daily trigger runs the extractor, tracks status, and logs errors centrally.",
+      "Extraction engine — a Python executable callable from the command line or from Excel, which auto-identifies folios and extracts invested value, market value, and gain or loss.",
+      "Format-specific parsing engines for ten institution layouts, plus a generic heuristic parser for unknown formats, using an asymmetric folio-window technique to handle multi-scheme and multi-page statements.",
+      "Local LLM fallback — a strictly validated safety net for layouts the rules cannot parse, running entirely on-premise.",
+      "Provenance and audit — structured error states such as folio-not-found and zero-balance, per-value confidence scores and source flags, and a daily run-summary email forming a complete trail.",
+    ],
+    myRole: [
+      {
+        area: "Process discovery",
+        detail: "Identified the daily routine as a candidate by watching where the finance team's day actually went.",
+      },
+      {
+        area: "Requirements gathering",
+        detail: "Collected the edge cases from the people who handled the statements, and made their exceptions the specification.",
+      },
+      {
+        area: "Solution design",
+        detail: "Chose the rules-first, AI-as-fallback ordering and the confidence-and-source model that makes the output auditable.",
+      },
+      {
+        area: "AI implementation",
+        detail:
+          "Deployed and validated the local language model fallback, and constrained it behind the same validation as the deterministic path.",
+      },
+      { area: "Automation", detail: "Built the request, collection, filing, extraction, and reporting stages." },
+      {
+        area: "Testing & UAT",
+        detail: "Rolled out in phases with user acceptance testing at each stage, stress-tested against large multi-folio datasets.",
+      },
+      { area: "Deployment", detail: "Moved to daily unattended production with run summaries and central error logging." },
+    ],
+    impact: [
+      "375 hours of manual work removed per year, from about ninety minutes a day across 250 working days.",
+      "Zero extraction errors across validated production runs, stress-tested against large multi-folio datasets.",
+      "Folio coverage scales as configuration rather than as new manual work.",
+      "Complete audit trail through daily run summaries, per-value confidence scores, and source flags.",
+      "No sensitive financial document leaves the organisation's environment, including the AI layer.",
+      "Transcription errors in fund figures eliminated, and every request and receipt logged.",
+    ],
+    learned:
+      "Deterministic rules should carry the load and AI should be the validated exception path. Reversing that ordering is how document automation becomes something people quietly stop trusting. The confidence score and the source flag matter as much as the extraction itself, because they tell a finance user exactly which numbers to check.",
   },
   {
     slug: "tds-certificate-ocr",
-    role: "Sole owner — discovery to production",
-    timeline: "Live · evolving to agent",
-    headlineMetrics: [
-      { value: "1,000+", label: "certificates processed" },
-      { value: "Offline", label: "AI extraction layer" },
-      { value: "Zero", label: "unverified values posted" },
-      { value: "Per-run", label: "exception reporting" }
-    ],
     name: "TDS Certificate OCR Platform",
     category: "AI Document Intelligence",
     status: "Live · evolving to AI agent",
     functions: "Customer Relations · Accounts Receivable",
-    tagline: "AI-assisted extraction that reads inconsistent scanned certificates — and knows when to ask a human.",
-    summary:
-      "An intelligent document-processing platform that splits bundled scans, classifies certificate types, extracts 15+ fields with confidence scoring, detects duplicates, and falls back to a fully offline local LLM — emitting audit-ready outputs on every run.",
-    focus: ["OCR", "Validation", "AI fallback", "Confidence scoring", "Data quality"],
-    problem:
-      "Customer-facing and receivables teams received a constant stream of scanned tax certificates in wildly inconsistent formats — single-page, multi-page, bundled scans, poor quality. Each required manually reading and keying 15+ fields into enterprise systems, and duplicate certificates regularly slipped through.",
-    context: [
-      "Documents arrive from external customers, so format and scan quality can never be controlled at the source.",
-      "The extracted fields feed tax-sensitive financial records — a wrong value is worse than a missing one.",
-      "Volume is continuous rather than seasonal, making this a daily operational load.",
-    ],
-    challenges: [
-      "Splitting bundled scans into individual certificates and distinguishing between two similar certificate types automatically.",
-      "Hard-to-extract fields — payment dates, identification numbers, and acknowledgement numbers with inconsistent placement across layouts.",
-      "Preventing duplicate certificates from re-entering the system.",
-      "Keeping everything offline: no external OCR or AI API was acceptable for these documents.",
-    ],
-    architecture: [
-      "OCR layer — PaddleOCR text extraction with smart grouping and page detection to segment bundled documents.",
-      "Classification — automatic detection of certificate type before field extraction begins.",
-      "Extraction & validation — rule-based field extraction with per-field confidence scores; low-confidence or missing fields are flagged for human review rather than silently accepted.",
-      "Duplicate detection against the register of previously processed references, catching repeats at high confidence.",
-      "Offline AI fallback — a locally hosted small language model handles layouts rules can't parse, with its output passed through the same strict validation as everything else.",
-      "Audit outputs — every run emits a summary workbook, an error workbook, and a full log, emailed automatically to stakeholders; failed documents stay in place for safe retry.",
-    ],
-    stack: ["Python", "PaddleOCR", "Regex extraction", "Local LLM via Ollama", "Excel reporting", "Automated email alerts"],
-    journey: [
-      "Began as a basic extractor; matured across five major versions into a platform with smart grouping, classification, and the offline AI fallback.",
-      "Confidence scoring changed the operating model: the system stopped pretending to be perfect and started telling users exactly where to look.",
-      "Now runs daily in production with proactive failure alerts; the next generation is being redesigned as a full AI agent.",
-    ],
-    impact: [
-      "Over a thousand certificates processed cumulatively, with monitored daily runs regularly completing clean with zero errors.",
-      "Accuracy safeguards prevent bad data from ever reaching finance records — uncertain values are routed to people, not posted.",
-      "Full auditability: summary, exceptions, and logs delivered to stakeholders on every run.",
-      "Privacy-compliant by construction — the AI layer runs entirely offline.",
-    ],
-    lessons: [
-      "Confidence scoring is the difference between automation people tolerate and automation people trust.",
-      "A local LLM can deliver the flexibility of AI without the data-exposure trade-off.",
-      "Retry-safe design (leave failures in place, alert loudly) makes daily unattended operation genuinely low-stress.",
-    ],
-    future: [
-      "Rebuilding as an agentic system that reasons about errors and unclear documents instead of just flagging them.",
-      "Deeper integration with downstream systems to close the loop from extraction to posting.",
-    ],
-  },
-  {
-    slug: "sap-zbrs-automation",
     role: "Sole owner — discovery to production",
-    timeline: "Monthly cycle · live",
+    timeline: "Five major versions · live",
+    tagline:
+      "AI-assisted extraction that reads inconsistent scanned certificates, and knows when to ask a human.",
+    focus: [
+      "Document intelligence",
+      "Confidence scoring",
+      "Human-in-the-loop design",
+      "Data quality",
+      "Offline AI",
+    ],
+    stack: [
+      "Python",
+      "PaddleOCR",
+      "Regex extraction",
+      "Local LLM via Ollama",
+      "Excel reporting",
+      "Automated email alerts",
+    ],
     headlineMetrics: [
-      { value: "100s", label: "bank accounts per cycle" },
-      { value: "~97%", label: "first-pass success" },
-      { value: "Zero", label: "misfiled statements" },
-      { value: "Unattended", label: "month-end execution" }
+      { value: "300 hrs", label: "of manual work removed per year" },
+      { value: "3,000", label: "certificates processed a year" },
+      { value: "Offline", label: "AI extraction layer" },
+      { value: "Zero", label: "unverified values posted" },
     ],
-    name: "SAP ZBRS Automation",
-    category: "SAP Automation",
-    status: "Live in production",
-    functions: "Payments · Finance",
-    tagline: "Unattended bank reconciliation statement generation across hundreds of accounts — filed perfectly, every month.",
-    summary:
-      "A Python-driven SAP GUI automation that runs reconciliation reports for hundreds of bank accounts from a master sheet, exports each as PDF, and files it into a structured month/department/entity/account hierarchy — with fault-tolerant batch design and an emailed audit summary.",
-    focus: ["SAP integration", "Reliability", "Fault tolerance", "Operational efficiency"],
     problem:
-      "Every month, the payments team generated bank reconciliation statements from SAP for hundreds of accounts across multiple entities. Each one meant logging in, running the transaction, setting dates, exporting a PDF, and manually filing it into a deeply nested folder structure — slow, repetitive, and easy to misfile.",
-    context: [
-      "The account master spans multiple companies and company codes, each with its own ledger ranges.",
-      "Statements follow a strict cut-off cycle, so timing and consistency matter.",
-      "Misfiled statements create downstream audit friction that costs far more than the filing itself.",
+      "Customer-facing and receivables teams received a constant stream of scanned tax certificates in uncontrollable formats: single-page, multi-page, bundled scans, poor quality. Each one required reading and keying more than fifteen fields into enterprise systems, and duplicate certificates regularly slipped through and were applied twice.",
+    existingProcess: [
+      "Certificates arrived from external customers, so neither format nor scan quality could be controlled at source.",
+      "A person opened each document, read more than fifteen fields by eye, and typed them into the enterprise system.",
+      "Bundled scans had to be split by hand, and two similar certificate types had to be told apart by eye.",
+      "There was no duplicate check, so the same credit could be applied twice or against the wrong customer ledger.",
+      "Volume was continuous rather than seasonal, making this a permanent daily load of about 3,000 certificates a year.",
     ],
-    challenges: [
-      "Brittle SAP GUI element identifiers that change between screens and versions, causing 'control not found' failures mid-batch.",
-      "Edge-case account states (such as blocked accounts) that break naive scripting.",
-      "Ensuring one failed account never takes down the remaining batch.",
-      "Modeling the real statement cycle and month-end scenarios accurately with the business team.",
+    opportunity: [
+      "Format could never be standardised at source, which rules out a rules-only approach and makes this a genuine AI problem rather than a scripting one.",
+      "The fields feed tax-sensitive financial records, where a wrong value is worse than a missing one. That argues for confidence scoring and human review of the uncertain cases rather than full automation.",
+      "Duplicate and mismatch detection was a control the manual process simply did not have, so automation could add accuracy rather than only speed.",
+      "No external OCR or AI service was acceptable for these documents, so the AI layer had to run offline.",
     ],
-    architecture: [
-      "Driver — Python controlling the SAP GUI through COM scripting, reading the account master (account, company code, ledger range) from Excel.",
-      "Batch engine — iterates every account, runs the reconciliation transaction, exports the statement as PDF.",
-      "Auto-filing — outputs organized into a Month → Department → Company Code → Account hierarchy on enterprise storage, eliminating manual filing entirely.",
-      "Fault isolation — each account is an independent unit of work; failures are captured with reasons into an exception workbook and the run continues.",
-      "Reporting — an automated summary email with totals, successes, failures, and a link to the output folder; failed accounts support surgical re-runs.",
+    solution:
+      "An intelligent document-processing platform that splits bundled scans, classifies certificate types, extracts more than fifteen fields with per-field confidence scoring, detects duplicates against the register of processed references, and falls back to a fully offline local language model for layouts the rules cannot parse. Every run emits audit-ready outputs.",
+    howItWorks: [
+      "OCR layer — text extraction with smart grouping and page detection to segment bundled documents into individual certificates.",
+      "Classification — automatic detection of certificate type before field extraction begins.",
+      "Extraction and validation — rule-based field extraction with per-field confidence scores. Low-confidence or missing fields are flagged for human review rather than silently accepted.",
+      "Duplicate detection against the register of previously processed references, catching repeats before they reach a ledger.",
+      "Offline AI fallback — a locally hosted small language model handles layouts the rules cannot parse, with its output passed through the same strict validation as everything else.",
+      "Audit outputs — every run emits a summary workbook, an error workbook, and a full log, emailed automatically to stakeholders. Failed documents stay in place for safe retry.",
     ],
-    stack: ["Python", "SAP GUI Scripting (COM)", "Excel account master", "Automated email reporting"],
-    journey: [
-      "First venture into SAP GUI automation — a deliberately higher-risk skill investment that opened the door to a broader SAP automation suite.",
-      "Early runs surfaced brittle element IDs and account-state edge cases; the design answer was isolation and targeted re-runs rather than fragile perfection.",
-      "Production runs now regularly complete with a very high first-pass success rate, and clean cycles finish fully successful.",
+    myRole: [
+      {
+        area: "Process discovery",
+        detail: "Traced the daily keying load and the duplicate-credit risk back to a single uncontrolled document intake.",
+      },
+      {
+        area: "Solution design",
+        detail:
+          "Designed the split, classify, extract, validate, and review pipeline, and the confidence thresholds that decide what a human sees.",
+      },
+      {
+        area: "AI implementation",
+        detail:
+          "Built the offline language-model fallback and constrained it behind the same validation as the deterministic extractors.",
+      },
+      { area: "Automation", detail: "Built the bundling logic, the duplicate register, and the per-run audit reporting." },
+      {
+        area: "Testing & UAT",
+        detail:
+          "Tuned extraction against real certificate pages across five major versions, driven by observed failures rather than coverage targets.",
+      },
+      { area: "Deployment", detail: "Runs daily in production with proactive failure alerting and retry-safe design." },
     ],
     impact: [
-      "Hundreds of bank accounts processed unattended each cycle, with roughly 97% first-pass success and clean completion after targeted re-runs.",
-      "Zero misfiling through automatic structured output — every statement lands exactly where auditors expect it.",
-      "The repetitive log-in / run / export / file loop eliminated from the team's month.",
-      "Full audit trail delivered to the payments team automatically.",
+      "300 hours of manual work removed per year, from about 3,000 certificates at roughly six minutes each.",
+      "Over a thousand certificates processed cumulatively at the last count, with monitored daily runs regularly completing clean.",
+      "Duplicate and mismatch detection prevents the same credit being applied twice or against the wrong customer ledger, which is a direct control over receivables accuracy.",
+      "Uncertain values are routed to a person rather than posted, so bad data does not reach finance records.",
+      "Full auditability: summary, exceptions, and logs delivered to stakeholders on every run.",
+      "Privacy-compliant by construction, because the AI layer runs entirely offline.",
     ],
-    lessons: [
-      "Design fault tolerance around the most fragile layer — in GUI automation, that is always the UI itself.",
-      "A surgical re-run capability is worth more than chasing a perfect first pass.",
-      "Sitting with the business to model the real statement cycle prevented an entire class of date-logic bugs.",
-    ],
-    future: [
-      "Natural successor already in internal testing: automated clearing of open reconciliation items, extending the suite from reporting into transaction processing.",
-    ],
+    learned:
+      "Confidence scoring is the difference between automation people tolerate and automation people trust. The system stopped pretending to be perfect and started telling users exactly where to look, and that single change is what moved it from a tool someone ran to a tool the team relies on.",
   },
   {
     slug: "reportgenie",
-    role: "Sole owner — discovery to production",
-    timeline: "Live · multi-department roadmap",
-    headlineMetrics: [
-      { value: "Config", label: "not code, to add a report" },
-      { value: "Daily", label: "unattended delivery" },
-      { value: "Per-report", label: "traceability" },
-      { value: "Reusable", label: "framework for later builds" }
-    ],
     name: "ReportGenie",
     category: "Enterprise Reporting Automation",
     status: "Live in production",
-    functions: "Finance · multi-department roadmap",
-    tagline: "A config-driven reporting robot — adding a new report is a data entry, not a code change.",
-    summary:
-      "An automated platform that logs into enterprise systems, executes predefined report variants across transactions, exports date-stamped Excel outputs, and emails them to the right users — running unattended on a scheduled virtual machine with per-report status tracking.",
-    focus: ["Config-driven architecture", "Scalability", "Business reporting", "Automation framework"],
+    functions: "All departments",
+    role: "Sole owner — discovery to production",
+    timeline: "Live · multi-department roadmap",
+    tagline: "A config-driven reporting engine where adding a new report is data entry, not a code change.",
+    focus: ["Config-driven architecture", "Reusable framework", "Scalability", "Unattended operation"],
+    stack: [
+      "Python",
+      "SAP GUI Scripting (COM)",
+      "Excel configuration",
+      "Automated email delivery",
+      "Scheduled VM",
+    ],
+    headlineMetrics: [
+      { value: "250 hrs", label: "of manual work removed per year" },
+      { value: "3,000", label: "reports delivered a year" },
+      { value: "Config", label: "not code, to add a report" },
+      { value: "Daily", label: "unattended delivery" },
+    ],
     problem:
-      "Finance depended on a battery of recurring system reports — dividends, payables, reconciliations, statutory deductions, staff loans, and more. Each demanded a daily ritual of logging in, applying the correct saved variant, exporting to Excel, and emailing users. Pure repetition, yet essential for monitoring pending items and timely decisions.",
-    context: [
-      "Each report is defined by a transaction code and a saved variant — a natural configuration pair.",
-      "Recipients differ per report, and outputs need to be date-stamped and traceable.",
-      "The tool had to run unattended on a virtual machine, surviving session and login quirks without a human nearby.",
+      "Finance depended on a battery of recurring system reports covering dividends, payables, reconciliations, statutory deductions, and staff loans. Each one demanded a daily ritual: log in, apply the correct saved variant, export to Excel, and email the right users. Pure repetition, yet essential for monitoring pending items and making timely decisions.",
+    existingProcess: [
+      "For each report, a person logged into the enterprise system and navigated to the transaction.",
+      "They applied the correct saved variant, which differed per report and followed inconsistent naming conventions.",
+      "They exported to Excel through the system's save dialogs, then attached the file to an email.",
+      "They sent it to that report's recipient list, which differed from every other report's.",
+      "Repeated daily, across the full battery, for about 3,000 report deliveries a year.",
     ],
-    challenges: [
-      "Handling varied variant naming conventions robustly across report types.",
-      "Reliable Excel export through the system's save dialogs — a notoriously fiddly scripting surface.",
-      "Ensuring one failed report never blocks the others in a run.",
-      "Unattended reliability: session handling, login recovery, and status logging with nobody watching.",
+    opportunity: [
+      "Every report reduced to the same triple: a transaction code, a saved variant, and a recipient list. That is a configuration row, not a program.",
+      "Because the variation between reports was data rather than logic, one engine could serve all of them, and adding the next report would be data entry.",
+      "The task was strictly rule-governed with no judgement in it, so this was an automation problem rather than an AI one.",
+      "The same driver could be reused for later system-automation projects, so the investment paid back beyond this one build.",
     ],
-    architecture: [
-      "Configuration registry — every report is a row: transaction code, variant, recipients. Adding a report is data entry, not development.",
-      "Execution engine — logs in, applies each variant, exports date-stamped Excel outputs through scripted save dialogs.",
-      "Distribution — outputs emailed automatically to designated users per report.",
-      "Independent status tracking per report, rolled into a run-summary email listing each report, its status, file, and size.",
-      "Reusable automation helpers shared with the reconciliation bot — a common SAP automation scaffolding.",
+    solution:
+      "An automated platform that logs into enterprise systems, executes predefined report variants across transactions, exports date-stamped Excel outputs, and emails them to the right users. It runs unattended on a scheduled virtual machine with per-report status tracking, and new reports are added by appending a configuration row.",
+    howItWorks: [
+      "Configuration — a worklist of transaction codes, saved variants, and recipient lists, held as data rather than in code.",
+      "Driver — Python controlling the enterprise GUI, applying each variant and exporting to Excel through the system's save dialogs.",
+      "Delivery — date-stamped outputs emailed per report to the correct recipients, so each file is traceable to a run.",
+      "Fault isolation — one failed report never blocks the others in a run; failures are captured with reasons.",
+      "Unattended operation — scheduled on a virtual machine, surviving session and login quirks without a person nearby.",
     ],
-    stack: ["Python", "SAP GUI Scripting", "Email automation", "VM scheduling"],
-    journey: [
-      "Designed config-first from day one, with the explicit ambition to generalize beyond a single system toward 'business apps' broadly.",
-      "Hardened through a tight test-fix-rerun loop until unattended VM operation was genuinely reliable.",
-      "Clean production runs now deliver the full report battery with zero failures and zero manual effort — and the business formally recorded its appreciation.",
+    myRole: [
+      {
+        area: "Process discovery",
+        detail: "Identified that the daily reporting ritual was the same four steps repeated across a whole battery of reports.",
+      },
+      {
+        area: "Solution design",
+        detail: "Made the call to build a configuration-driven engine rather than a script per report, which is what made it reusable.",
+      },
+      { area: "Automation", detail: "Built the GUI driver, the variant handling, the export path, and the per-report delivery." },
+      {
+        area: "Integration",
+        detail: "Handled the enterprise system's save dialogs and login behaviour reliably enough for unattended operation.",
+      },
+      {
+        area: "Deployment",
+        detail: "Scheduled on a virtual machine for unattended daily execution with per-report status tracking.",
+      },
+      {
+        area: "Stakeholder management",
+        detail: "Onboarded finance users onto delivered reports and took enhancement requests through to release.",
+      },
     ],
     impact: [
+      "250 hours of manual work removed per year, from about 3,000 report deliveries at roughly five minutes each.",
       "The full daily report battery delivered unattended, with per-report traceability.",
       "Faster monitoring of pending items and more timely decisions for finance users.",
-      "Formal, unsolicited appreciation from the business — trust that funds the next wave of automation.",
-      "A reusable automation framework that lowered the cost of every subsequent SAP project.",
+      "Unsolicited formal appreciation from the business, recorded as a project success.",
+      "A reusable automation framework that lowered the cost of every subsequent enterprise-system project.",
     ],
-    lessons: [
-      "Config-over-code is the single highest-leverage architectural decision in enterprise automation.",
-      "Documenting and quantifying value with the business is part of the job, not an afterthought.",
-      "Shared scaffolding across bots turns individual tools into a platform.",
-    ],
-    future: [
-      "Extending the same engine to applications beyond SAP — one registry, many systems.",
-    ],
+    learned:
+      "When the variation between instances is data rather than logic, the answer is one engine and a configuration table, not one script per instance. That decision is why the framework outlived its first use case and became the basis for later builds.",
   },
   {
     slug: "msme-batch-validator",
-    role: "Sole owner — discovery to production",
-    timeline: "On-demand · live",
-    headlineMetrics: [
-      { value: "1,000+", label: "registrations per run" },
-      { value: "Days → minutes", label: "verification cycle" },
-      { value: "Majority", label: "auto-filled cleanly" },
-      { value: "Audit-ready", label: "centralised output" }
-    ],
     name: "MSME Batch Validator",
     category: "Compliance Automation",
     status: "Live",
     functions: "Cost Control · Accounts Billing",
-    tagline: "Regulatory verification at scale — days of portal lookups compressed into minutes, with humans on the edge cases.",
-    summary:
-      "A verification platform that extracts vendor registration details from compliance PDFs, validates them in bulk against the government registry via API, fuzzy-matches results back to the vendor master, and produces a single audit-ready output with three-tier review tagging.",
-    focus: ["Compliance", "Validation", "Data processing", "Human-in-the-loop design"],
+    role: "Sole owner — discovery to production",
+    timeline: "On-demand · live",
+    tagline: "Regulatory verification at scale, with people kept on the genuinely uncertain cases.",
+    focus: ["Compliance", "Human-in-the-loop design", "Data quality", "Cost control", "Fuzzy matching"],
+    stack: [
+      "Python",
+      "PDF extraction",
+      "Government registry verification API",
+      "Fuzzy matching",
+      "Excel consolidation",
+    ],
+    headlineMetrics: [
+      { value: "160 hrs", label: "of manual work removed per year" },
+      { value: "1,600", label: "vendor registrations verified a year" },
+      { value: "Days → minutes", label: "verification cycle" },
+      { value: "Audit-ready", label: "centralised output" },
+    ],
     problem:
-      "The cost control and billing teams needed to verify the MSME registration status of a very large vendor base against the government portal — required for compliance, quarterly reporting, and correct payment treatment. Done manually, one portal lookup at a time plus transcription from registration PDFs, it would have taken days.",
-    context: [
-      "Vendor master data was messy: duplicate codes, inconsistent state casing, missing dates, multi-state entries.",
-      "The validation API call carries real cost, so wasteful or premature runs had to be prevented.",
-      "The output feeds statutory reporting, so it had to be consistent, centralized, and audit-ready.",
+      "The cost control and billing teams needed to verify the registration status of a very large vendor base against a government portal, required for compliance, quarterly reporting, and correct payment treatment. Done by hand, one portal lookup at a time plus transcription from registration PDFs, it would have taken days per cycle.",
+    existingProcess: [
+      "A person opened each vendor's registration PDF and transcribed the details by hand.",
+      "They then looked up each vendor on the government portal individually to confirm status.",
+      "Results were reconciled against internal vendor records that carried duplicate codes, inconsistent state casing, missing dates, and multi-state entries.",
+      "The output fed statutory reporting, so inconsistency between cycles created audit friction.",
     ],
-    challenges: [
-      "Parsing varied registration PDF layouts into structured data.",
-      "Matching validated registry results back to imperfect internal vendor records.",
-      "Designing the process so humans review only genuinely uncertain cases instead of everything.",
-      "Gating the costly API run behind explicit human sign-off.",
+    opportunity: [
+      "The lookup itself was available as an API, so the slow part was not the check but the volume of manual checks.",
+      "Vendor master data was messy enough that naive matching would produce wrong answers, which argued for fuzzy matching plus explicit human review of ambiguous cases rather than blind automation.",
+      "The verification API carries a real per-call cost, so the design needed a human sign-off gate before anything expensive ran.",
+      "Because the output feeds statutory reporting, consolidating it into one consistent audit-ready artefact was worth as much as the time saved.",
     ],
-    architecture: [
-      "Stage 1 — PDF import and data extraction from vendor registration documents into structured Excel.",
-      "Stage 2 — collaborative data review and enrichment with the billing team before anything expensive runs.",
-      "Stage 3 — bulk validation through the official registry verification API.",
-      "Stage 4 — matching and consolidation: fuzzy matching on state and vendor name, enriched with internal vendor codes, merged into one audit-ready workbook.",
+    solution:
+      "A verification platform that extracts vendor registration details from compliance PDFs, validates them in bulk against the government registry via API, fuzzy-matches results back to the vendor master, and produces a single audit-ready output with three-tier review tagging so people only look at genuinely uncertain cases.",
+    howItWorks: [
+      "Stage one — PDF import and data extraction from vendor registration documents into structured form.",
+      "Stage two — collaborative data review and enrichment with the billing team, before anything costly runs.",
+      "Stage three — bulk validation through the official registry verification API, gated behind explicit human sign-off.",
+      "Stage four — matching and consolidation: fuzzy matching on state and vendor name, enriched with internal vendor codes, merged into one audit-ready workbook.",
       "Three-tier tagging — clean matches auto-filled, ambiguous cases tagged for multi-option review, non-matches tagged for targeted follow-up.",
     ],
-    stack: ["Python", "PDF extraction", "Government registry verification API", "Fuzzy matching", "Excel consolidation"],
-    journey: [
-      "Started as a quarterly compliance pain point raised by cost control; scoped as a staged pipeline with explicit human checkpoints.",
-      "Fuzzy matching and vendor-code enrichment were added at the stakeholders' request — the tool grew in direct response to how the team actually works.",
-      "First full production run validated the entire vendor batch in a single pass.",
+    myRole: [
+      {
+        area: "Process discovery",
+        detail: "Scoped a quarterly compliance pain point raised by cost control into a staged pipeline with explicit checkpoints.",
+      },
+      {
+        area: "Requirements gathering",
+        detail: "Worked through the vendor master's data quality problems with the billing team before designing the matching logic.",
+      },
+      {
+        area: "Solution design",
+        detail:
+          "Designed the three-tier tagging model so review effort concentrates on uncertainty, and the sign-off gate that protects the API spend.",
+      },
+      {
+        area: "Automation",
+        detail: "Built the PDF extraction, the bulk validation, the fuzzy matching, and the consolidation into one output.",
+      },
+      { area: "Integration", detail: "Integrated the official government registry verification API." },
+      {
+        area: "Stakeholder management",
+        detail: "Delivered stakeholder-requested enhancements responsively after the first production cycle.",
+      },
     ],
     impact: [
-      "Well over a thousand registrations verified in a single run — days of manual work reduced to minutes.",
+      "160 hours of manual work removed per year, from about 1,600 vendor registrations at roughly six minutes each.",
+      "Well over a thousand registrations verified in a single run, compressing days of manual work into minutes.",
       "The overwhelming majority of records auto-filled cleanly, leaving people to review only a small, clearly tagged remainder.",
-      "Standardized, consistent validation across the entire vendor base with a centralized, audit-ready output.",
-      "A reusable pattern for future large-dataset compliance validations.",
+      "Standardised, consistent validation across the entire vendor base with a centralised, audit-ready output.",
+      "Supports payment-timeline compliance obligations and reduces disallowance risk at assessment.",
+      "A reusable pattern for future large-dataset compliance validations, and acknowledged by the cost control team.",
     ],
-    lessons: [
-      "Human-in-the-loop is a design principle, not a fallback: review tags and pre-run sign-offs make automation trustworthy in regulated processes.",
-      "Integration beats reinvention — leveraging the existing official verification API delivered in days what scraping would have delivered in weeks.",
-      "Responsiveness to stakeholder-driven enhancements is what turns a script into an adopted tool.",
+    learned:
+      "Human-in-the-loop is a design decision about where to spend attention, not a fallback for when automation fails. Tagging the uncertain cases in three tiers meant the team's review effort landed exactly where judgement was actually needed, and the sign-off gate meant automation never quietly spent money.",
+  },
+  {
+    slug: "sap-zbrs-automation",
+    name: "SAP ZBRS Automation",
+    category: "Enterprise System Automation",
+    status: "Live in production",
+    functions: "Payments · Finance",
+    role: "Sole owner — discovery to production",
+    timeline: "Monthly cycle · live",
+    tagline:
+      "Unattended reconciliation statement generation across hundreds of accounts, filed correctly every month.",
+    focus: ["Legacy system automation", "Fault tolerance", "Reliability", "Audit readiness"],
+    stack: ["Python", "SAP GUI Scripting (COM)", "Excel account master", "Automated email reporting"],
+    headlineMetrics: [
+      { value: "96 hrs", label: "of manual work removed per year" },
+      { value: "720", label: "statements generated a year" },
+      { value: "~97%", label: "first-pass success" },
+      { value: "Zero", label: "misfiled statements" },
     ],
-    future: [
-      "Generalizing the staged extract → review → validate → consolidate pattern to other regulatory datasets.",
+    problem:
+      "Every month the payments team generated bank reconciliation statements from SAP for hundreds of accounts across multiple entities. Each one meant logging in, running the transaction, setting the dates, exporting a PDF, and filing it by hand into a deeply nested folder structure. Slow, repetitive, and easy to misfile in a way that creates audit friction later.",
+    existingProcess: [
+      "A person logged into SAP and ran the reconciliation transaction for one account.",
+      "They set the date range for that account's cycle, then exported the result as a PDF.",
+      "They filed the PDF by hand into a month, department, company code, and account hierarchy on enterprise storage.",
+      "Repeated for hundreds of accounts spanning multiple companies and company codes, each with its own ledger ranges.",
+      "A misfiled statement was not obvious at the time, and cost far more to untangle at audit than the filing itself had saved.",
     ],
+    opportunity: [
+      "The volume was high and the rules were strict, with the expensive part being the filing rather than the thinking. That is automation, not AI.",
+      "The account master already existed as structured data, so the worklist did not have to be invented.",
+      "The only real risk was brittleness in the SAP GUI layer, and brittleness can be contained with fault isolation rather than avoided by not automating.",
+      "Structured automatic output would eliminate misfiling as a category, which was worth more to auditors than the hours.",
+    ],
+    solution:
+      "A Python-driven SAP GUI automation that runs reconciliation reports for hundreds of bank accounts from a master sheet, exports each as a PDF, and files it into a structured month, department, entity, and account hierarchy. Built with fault-tolerant batch design so one failure never stops the run, and an emailed audit summary on completion.",
+    howItWorks: [
+      "Driver — Python controlling the SAP GUI through COM scripting, reading the account master with account, company code, and ledger range from Excel.",
+      "Batch engine — iterates every account, runs the reconciliation transaction, and exports the statement as a PDF.",
+      "Auto-filing — outputs organised into a month, department, company code, and account hierarchy on enterprise storage, eliminating manual filing entirely.",
+      "Fault isolation — each account is an independent unit of work. Failures are captured with reasons into an exception workbook and the run continues.",
+      "Reporting — an automated summary email with totals, successes, failures, and a link to the output folder, so failed accounts support surgical re-runs.",
+    ],
+    myRole: [
+      {
+        area: "Process discovery",
+        detail:
+          "Modelled the real statement cycle and month-end scenarios with the payments team, which prevented an entire class of date-logic bugs.",
+      },
+      {
+        area: "Solution design",
+        detail: "Chose fault isolation and targeted re-runs over chasing a perfect first pass, because the fragile layer was the GUI.",
+      },
+      {
+        area: "Automation",
+        detail:
+          "Built the SAP GUI driver, the batch engine, and the automatic filing hierarchy. This was a deliberate first investment in SAP GUI automation.",
+      },
+      { area: "Integration", detail: "Integrated with the Excel account master and enterprise storage." },
+      {
+        area: "Testing & UAT",
+        detail: "Surfaced brittle element identifiers and account-state edge cases in early runs and hardened against both.",
+      },
+      {
+        area: "Deployment",
+        detail: "Moved to unattended monthly execution with an emailed audit trail to the payments team.",
+      },
+    ],
+    impact: [
+      "96 hours of manual work removed per year, from about 720 statements at roughly eight minutes each.",
+      "Hundreds of bank accounts processed unattended each cycle, with roughly 97 percent first-pass success and clean completion after targeted re-runs.",
+      "Zero misfiling, because every statement lands exactly where auditors expect it by construction.",
+      "The repetitive log-in, run, export, and file loop removed from the team's month entirely.",
+      "Full audit trail delivered to the payments team automatically on every run.",
+      "Opened the door to a broader enterprise-system automation suite, with open-item clearing as the natural successor.",
+    ],
+    learned:
+      "Design the fault tolerance around the most fragile layer. In GUI automation that layer is always the interface itself, so isolation and a surgical re-run capability are worth more than trying to make the first pass perfect.",
   },
   {
     slug: "gv-hub",
-    role: "Product owner & builder",
+    name: "GV Hub",
+    category: "Enterprise Application Development",
+    status: "Design / build · working core live",
+    functions: "Payments · Accounts Receivable · Retail operations",
+    role: "Product owner and builder",
     timeline: "Design / build · core live",
+    tagline: "From spreadsheets to a real platform: voucher inventory, approvals, and expiry intelligence in one system.",
+    focus: [
+      "Product thinking",
+      "Approval workflow design",
+      "Data modelling",
+      "Multi-role access design",
+      "Dashboarding",
+    ],
+    stack: ["Power Apps", "Power Automate", "SharePoint", "Workflow & approval design", "Dashboard design"],
     headlineMetrics: [
       { value: "6", label: "modules in the platform" },
       { value: "Serial-level", label: "inventory traceability" },
       { value: "Zero", label: "failures on legacy migration" },
-      { value: "Maker-checker", label: "approval control" }
+      { value: "Maker-checker", label: "approval control" },
     ],
-    name: "GV Hub",
-    category: "Enterprise Application Development",
-    status: "Design / Build · working core live",
-    functions: "Payments · Accounts Receivable · Retail operations",
-    tagline: "From spreadsheets to a real platform — voucher inventory, approvals, and expiry intelligence in one system.",
-    summary:
-      "A centralized voucher inventory and workflow platform built on the Microsoft Power Platform: inward requests, maker-checker approvals, serial-level inventory, batch-merge logic, expiry monitoring, receivables due tracking, and management dashboards — replacing ledger-and-spreadsheet tracking with a single source of truth.",
-    focus: ["Product thinking", "Workflow design", "Approval systems", "Inventory management", "Dashboarding", "Enterprise application architecture"],
     problem:
-      "The retail business receives large volumes of gift vouchers from tenants and issues them internally across departments — historically tracked in a ledger system and spreadsheets. There was no single source of truth, no real-time balances, no expiry alerts, no maker-checker approvals, and no serial-level traceability. Receivable dues slipped through and vouchers could silently lapse.",
-    context: [
-      "A formal mandate from finance and accounts leadership, tracked as a business applications delivery.",
-      "Multiple roles — requesters, approvers, managers — each needing a different view of the same inventory.",
-      "The platform had to absorb a clean one-time migration of existing inventory before going live.",
+      "The retail business receives large volumes of gift vouchers from tenants and issues them internally across departments, historically tracked in a legacy ledger system and spreadsheets. There was no single source of truth, no real-time balances, no expiry alerts, no maker-checker approvals, and no serial-level traceability. Receivable dues slipped through and vouchers could silently lapse.",
+    existingProcess: [
+      "Inward vouchers were recorded in a legacy ledger system and mirrored into spreadsheets.",
+      "Balances were derived by hand, so nobody could state current stock with confidence at any given moment.",
+      "Issuance was requested and approved informally, without a maker-checker step or photo proof of what was actually received.",
+      "Expiry was tracked by whoever remembered to check, so vouchers lapsed unnoticed.",
+      "Tenant receivable dues were monitored separately, and slipped.",
     ],
-    challenges: [
-      "Defining the batch-merge rule: identical brand, denomination, expiry, and location merge into an existing batch; anything else creates a new batch row.",
-      "Debugging platform-level query failures on compound filters involving lookup columns, date formatting, and delegable operators.",
-      "Building a maker-checker approval flow with an 'approve with edits' path — photo proof review, verified-versus-claimed quantity adjustment, and notes.",
-      "Making dashboard KPIs fully dynamic with graceful blank/zero handling, and pivoting the charting approach when native components fell short.",
+    opportunity: [
+      "This was not an automation problem but a system-of-record problem. The value was in having one authoritative source, not in removing keystrokes.",
+      "The business already followed real rules informally, such as merging identical batches and picking oldest-expiry-first. Encoding them made them enforceable rather than optional.",
+      "Multiple roles needed different views of the same inventory, which is a product and permissions problem rather than a scripting one.",
+      "Expiry and receivables were both time-based and therefore automatable once the data model was right.",
     ],
-    architecture: [
-      "Data layer — a SharePoint-backed relational architecture: central inventory, transaction log, due records, and location references.",
-      "Opening Inventory module — one-time migration from the legacy ledger with duplicate-serial validation and automatic source archiving.",
-      "Receivables Due module — per-tenant agreements auto-generate due records by frequency, with daily overdue intimations.",
-      "Receipt module — physical voucher receipts auto-classified as full, partial, excess, or delayed, flowing through maker-checker approval into inventory.",
+    solution:
+      "A centralised voucher inventory and workflow platform: inward requests, maker-checker approvals, serial-level inventory, batch-merge logic, expiry monitoring, receivables due tracking, and management dashboards. It replaces ledger-and-spreadsheet tracking with a single source of truth where balances are always derived from movements.",
+    howItWorks: [
+      "Data layer — a relational architecture holding central inventory, a transaction log, due records, and location references.",
+      "Opening inventory module — a one-time migration from the legacy ledger with duplicate-serial validation and automatic source archiving.",
+      "Receivables due module — per-tenant agreements auto-generate due records by frequency, with daily overdue intimations.",
+      "Receipt module — physical voucher receipts auto-classified as full, partial, excess, or delayed, flowing through maker-checker approval into inventory, including an approve-with-edits path with photo proof review and verified-versus-claimed quantity adjustment.",
       "Issuance module — request forms with live availability, oldest-expiry-first picking, and serial-level deduction.",
-      "Manager view — KPI dashboard, live inventory, a tiered expiry monitor (critical / warning / notice bands), transaction log, and administrative actions.",
+      "Manager view — a KPI dashboard, live inventory, a tiered expiry monitor across critical, warning, and notice bands, the transaction log, and administrative actions.",
     ],
-    stack: ["Power Apps", "Power Automate", "SharePoint", "Workflow & approval design", "Dashboard design"],
-    journey: [
-      "Began with a business requirements document and a clickable HTML prototype before a single Power Apps screen was built — prototype-first discipline.",
-      "The opening migration landed cleanly: every legacy batch imported with zero failures and the source automatically archived.",
-      "The end-to-end approval flow is live, with real inward requests posted to inventory and batch-merge logic validated in production on repeated identical receipts.",
-      "Rebranded from a single tool to a platform identity as scope grew.",
+    myRole: [
+      {
+        area: "Process discovery",
+        detail:
+          "Mapped how vouchers actually moved between tenants, departments, and issue counters, including the informal rules nobody had written down.",
+      },
+      {
+        area: "Requirements gathering",
+        detail: "Wrote the business requirements document against a formal mandate from finance and accounts leadership.",
+      },
+      {
+        area: "Solution design",
+        detail:
+          "Built a clickable prototype before a single application screen, so stakeholders aligned before build effort was committed.",
+      },
+      {
+        area: "Architecture",
+        detail:
+          "Designed the relational data model, including the batch-merge rule that determines when stock consolidates and when it creates a new row.",
+      },
+      {
+        area: "Automation",
+        detail:
+          "Built the approval flows, the automatic receipt classification, the expiry banding, and the confirmation communications.",
+      },
+      {
+        area: "Integration",
+        detail: "Migrated the legacy opening inventory with duplicate-serial validation and automatic archiving of the source.",
+      },
+      {
+        area: "Stakeholder management",
+        detail: "Ran a multi-role rollout across payments, receivables, and retail operations.",
+      },
     ],
     impact: [
       "Replaces ledger-and-spreadsheet tracking with a real-time, single-source-of-truth platform.",
       "Full audit trail, serial-level traceability, tiered expiry alerting, and management reporting where none existed.",
-      "Working approval core live in production with automated confirmation communications.",
-      "A qualitative leap from single-purpose bots to a multi-module, multi-role enterprise application.",
+      "The opening migration landed with every legacy batch imported and zero failures, and the source automatically archived.",
+      "Working approval core live in production, with batch-merge logic validated on repeated identical receipts and automated confirmation communications.",
+      "Balances are always derived from movements, so stock cannot drift away from the transactions behind it.",
+      "A qualitative leap from single-purpose automations to a multi-module, multi-role enterprise application.",
     ],
-    lessons: [
-      "Prototype-first delivery aligns stakeholders before expensive build effort is committed.",
-      "Data-model decisions (like the batch-merge rule) are product decisions — they encode how the business actually thinks.",
-      "Platform thinking pays: the architecture extends naturally to future locations and voucher programs.",
-    ],
-    future: [
-      "Completing the dashboard UI, automating due-generation and daily intimations, and adding exception flows toward full production rollout.",
-    ],
+    learned:
+      "Data-model decisions are product decisions. The batch-merge rule encodes how the business actually thinks about stock, and getting it wrong would have made every downstream number wrong in a way no dashboard would have revealed.",
   },
 ];
 

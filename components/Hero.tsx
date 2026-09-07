@@ -2,17 +2,8 @@
 
 import { useState, type CSSProperties } from "react";
 import Link from "next/link";
-import { Search, Target, Blocks, Users, TrendingUp } from "lucide-react";
 import { site, positioning } from "@/lib/content";
 import { withBase } from "@/lib/paths";
-
-const ICONS = {
-  search: Search,
-  target: Target,
-  blocks: Blocks,
-  users: Users,
-  trending: TrendingUp,
-} as const;
 
 const initials = site.name
   .split(" ")
@@ -35,32 +26,41 @@ export default function Hero() {
           style={enter(0)}
           className="glass-lit enter flex flex-col justify-center p-7 sm:p-9 md:p-11"
         >
-          <p className="eyebrow">{positioning.eyebrow}</p>
+          <p className="eyebrow">{positioning.descriptor}</p>
 
-          {/* Two blocks rather than one wrapped string, so the accent always
-              starts its own line instead of orphaning a word at any width. */}
-          <h1 className="mt-5 max-w-[34rem] font-display text-[2.1rem] font-semibold leading-[1.08] tracking-tight text-paper sm:text-[2.4rem] md:text-[3.05rem]">
-            <span className="block">{positioning.headlineLead}</span>
-            <span className="block text-ember">{positioning.headlineAccent}</span>
+          {/* One h1 carrying both the name and the positioning, so the name is
+              still the page's primary heading for search. */}
+          <h1 className="mt-5">
+            <span className="block font-display text-lg font-semibold tracking-tight text-mist">
+              {site.name}
+            </span>
+            <span className="mt-2 block max-w-[30rem] font-display text-[2rem] font-semibold leading-[1.1] tracking-tight text-paper sm:text-[2.35rem] md:text-[3rem]">
+              I turn business problems into{" "}
+              <span className="text-ember">
+                {/* The hyphen is a break opportunity, so keep the compound whole. */}
+                <span className="whitespace-nowrap">AI-powered</span> systems
+              </span>
+              .
+            </span>
           </h1>
 
           <p className="mt-6 max-w-xl text-[15px] leading-relaxed text-mist md:text-[17px]">
-            {positioning.subhead}
+            {positioning.supporting}
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <Link
-              href="/#orbit"
+              href="/#work"
               className="focus-ring rounded-full bg-ember px-6 py-3 font-label text-sm font-bold text-ink shadow-[0_10px_30px_-12px_rgba(255,132,0,0.7)] transition-transform hover:-translate-y-0.5"
             >
-              See the flagship build
+              {positioning.primaryCta}
             </Link>
             <a
               href={withBase(site.resumeFile)}
               download
               className="glass-chip focus-ring px-6 py-3 font-label text-sm font-semibold text-paper transition-colors hover:border-white/25"
             >
-              Download resume
+              {positioning.secondaryCta}
             </a>
             <a
               href={site.linkedin}
@@ -108,45 +108,11 @@ export default function Hero() {
             />
             <p className="font-label text-[12.5px] font-semibold leading-snug text-paper/90">
               {site.role}
-              <span className="mt-0.5 block text-mist">{site.company}</span>
+              <span className="mt-0.5 block text-mist">
+                {site.company} · {site.location}
+              </span>
             </p>
           </div>
-        </div>
-      </div>
-
-      {/* The operating loop — stated up front because it is the differentiator. */}
-      <div className="wrap relative">
-        <div style={enter(0.3)} className="glass enter mt-6 p-6 sm:p-7">
-          <p className="font-label text-[10px] font-semibold uppercase tracking-caps text-mist">
-            How a business problem becomes a production system
-          </p>
-          <ol className="mt-5 grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-5">
-            {positioning.loop.map((step, i) => {
-              const Icon = ICONS[step.icon];
-              return (
-                <li
-                  key={step.label}
-                  className="glass glass-hover group flex items-center gap-3 p-3.5 sm:flex-col sm:items-start sm:gap-3 sm:p-4"
-                >
-                  <span
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-white/10 bg-white/[0.05] text-ember transition-colors group-hover:border-ember/40 group-hover:bg-ember/[0.14]"
-                    aria-hidden="true"
-                  >
-                    <Icon size={17} strokeWidth={1.75} />
-                  </span>
-                  <span className="font-label text-[12px] font-semibold leading-snug text-paper/90 sm:text-[12.5px]">
-                    {step.label}
-                  </span>
-                  <span
-                    className="ml-auto font-display text-[11px] font-semibold text-mist sm:ml-0 sm:mt-auto"
-                    aria-hidden="true"
-                  >
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                </li>
-              );
-            })}
-          </ol>
         </div>
       </div>
     </section>

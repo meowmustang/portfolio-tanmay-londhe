@@ -12,11 +12,11 @@ export default function Footer() {
           </p>
         </div>
         <nav className="flex flex-wrap gap-x-6 gap-y-1" aria-label="Footer">
-          <Link href="/#solutions" className="focus-ring inline-flex min-h-[24px] items-center rounded-sm font-label text-xs font-semibold text-mist hover:text-paper">
+          <Link href="/#work" className="focus-ring inline-flex min-h-[24px] items-center rounded-sm font-label text-xs font-semibold text-mist hover:text-paper">
             Solutions
           </Link>
-          <Link href="/#process" className="focus-ring inline-flex min-h-[24px] items-center rounded-sm font-label text-xs font-semibold text-mist hover:text-paper">
-            How I work
+          <Link href="/#approach" className="focus-ring inline-flex min-h-[24px] items-center rounded-sm font-label text-xs font-semibold text-mist hover:text-paper">
+            Approach
           </Link>
           <a href={site.linkedin} target="_blank" rel="noopener noreferrer" className="focus-ring inline-flex min-h-[24px] items-center rounded-sm font-label text-xs font-semibold text-mist hover:text-paper">
             LinkedIn

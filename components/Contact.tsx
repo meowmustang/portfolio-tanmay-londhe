@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { site } from "@/lib/content";
+import { site, contact } from "@/lib/content";
 import { withBase } from "@/lib/paths";
 import Reveal from "./Reveal";
 
@@ -72,15 +72,10 @@ export default function Contact() {
       <div className="wrap grid gap-14 lg:grid-cols-2">
         <Reveal>
           <p className="eyebrow">Contact</p>
-          <h2 className="mt-4 font-display text-3xl font-semibold leading-tight tracking-tight md:text-[2.6rem]">
-            Where should the next transformation start?
+          <h2 className="mt-4 font-display text-3xl font-semibold leading-tight tracking-tight text-paper md:text-[2.6rem]">
+            {contact.headline}
           </h2>
-          <p className="mt-5 max-w-md text-base leading-relaxed text-mist">
-            Open to conversations about AI transformation, intelligent automation programmes,
-            and platform ownership. If a process in your organisation costs more than it
-            should, describe how it runs today and I will tell you what I think is worth
-            changing.
-          </p>
+          <p className="mt-5 max-w-md text-base leading-relaxed text-mist">{contact.body}</p>
 
           <dl className="mt-10 space-y-5">
             <div>
@@ -208,7 +203,7 @@ export default function Contact() {
               disabled={state === "sending"}
               className="focus-ring mt-6 w-full rounded-full bg-ember px-6 py-3 font-label text-sm font-bold text-ink transition-transform hover:-translate-y-0.5 disabled:opacity-60 disabled:hover:translate-y-0"
             >
-              {state === "sending" ? "Sending..." : ENDPOINT ? "Send message" : "Compose email"}
+              {state === "sending" ? "Sending..." : `${contact.cta} →`}
             </button>
 
             <p

@@ -26,9 +26,9 @@ const manrope = Manrope({
   display: "swap",
 });
 
-const title = "Tanmay Londhe — AI Transformation & Enterprise Automation";
+const title = "Tanmay Londhe — AI Transformation & Automation | Business Systems";
 const description =
-  "I find how work actually gets done, identify what AI and automation can improve, and turn those ideas into production systems with measurable business impact. Eight enterprise case studies across finance, tax, payments, compliance, and retail.";
+  "I turn business problems into AI-powered systems. Eighteen AI and automation initiatives across finance, tax, payments, compliance and retail, removing 3,897 hours of manual work a year. Eight full case studies from problem to measured impact.";
 
 /* site.url may carry a GitHub Pages sub-path, so asset URLs are built absolutely.
    A leading-slash path would resolve against the origin and drop the repo segment. */
@@ -41,14 +41,14 @@ export const metadata: Metadata = {
   keywords: [
     "Tanmay Londhe",
     "AI transformation",
-    "Enterprise AI",
-    "Business process automation",
-    "Digital transformation",
+    "AI strategy and implementation",
+    "Business systems",
     "Intelligent automation",
-    "AI operating model",
-    "Business Applications",
+    "Business process automation",
     "Document intelligence",
-    "Power Platform",
+    "AI opportunity identification",
+    "Enterprise automation",
+    "Business Applications",
     "SAP automation",
     "Mumbai",
   ],
@@ -88,12 +88,13 @@ const personSchema = {
   description,
   knowsAbout: [
     "AI transformation",
+    "AI opportunity identification",
     "Business process automation",
     "Document intelligence",
+    "On-premise LLM deployment",
     "Solution architecture",
-    "Microsoft Power Platform",
-    "SAP automation",
-    "Change management",
+    "Enterprise integration",
+    "Change and adoption",
   ],
 };
 

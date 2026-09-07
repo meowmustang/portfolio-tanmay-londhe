@@ -8,12 +8,12 @@ export default function Solutions() {
   const rest = solutions.filter((s) => !s.featured);
 
   return (
-    <section id="solutions" className="py-20 md:py-28">
+    <section id="work" className="py-20 md:py-28">
       <div className="wrap">
         <SectionHeading
-          eyebrow="Enterprise solutions"
-          title="The systems that built the case for a platform"
-          lede="Seven more, each taken from a business problem through architecture, build, UAT, and deployment — and each one a reason ORBIT exists. Open any case study for the full journey: problem, architecture, implementation, measured impact, and what it taught me."
+          eyebrow="Selected work"
+          title="Seven more systems, each with a number behind it"
+          lede="Each one taken from a business problem through the existing process, the opportunity, the build, and the measured outcome. Open any case study for the full narrative, including exactly what I did on it."
         />
         <div className="mt-12 grid gap-4 md:grid-cols-2">
           {rest.map((s, i) => (

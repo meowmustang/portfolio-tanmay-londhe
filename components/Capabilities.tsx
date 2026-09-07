@@ -7,33 +7,33 @@ export default function Capabilities() {
     <section id="capabilities" className="py-20 md:py-28">
       <div className="wrap">
         <SectionHeading
-          eyebrow="What I actually do"
-          title="Transformation is three jobs, not one"
-          lede="Most automation programmes fail on the first job and the third — nobody mapped the real process, and nobody measured whether anything changed. The build in the middle is the easy part."
+          eyebrow="Capabilities"
+          title="Grouped by what they deliver"
+          lede="Every item here is behind at least one system in production. Retrieval-augmented generation and autonomous agents are deliberately absent: an agentic rebuild is a documented roadmap direction, not something I have shipped."
         />
 
-        <div className="mt-12 grid gap-4 lg:grid-cols-3">
-          {capabilities.map((c, i) => (
-            <Reveal key={c.number} delay={i * 0.08}>
-              <div className="glass glass-hover group flex h-full flex-col p-7 md:p-8">
-              <div className="flex items-baseline gap-4">
-                <span className="font-display text-sm font-semibold text-ember">{c.number}</span>
-                <span
-                  className="h-px flex-1 bg-gradient-to-r from-ember/40 to-transparent transition-all duration-500 group-hover:from-ember"
-                  aria-hidden="true"
-                />
+        <Reveal className="mt-12">
+          <div className="glass divide-y divide-white/[0.07] p-2 sm:p-4">
+            {capabilities.map((c) => (
+              <div
+                key={c.group}
+                className="grid gap-3 px-3 py-6 md:grid-cols-[180px_1fr] md:gap-10"
+              >
+                <h3 className="font-display text-lg font-semibold text-paper">{c.group}</h3>
+                <ul className="flex flex-wrap gap-2">
+                  {c.items.map((item) => (
+                    <li
+                      key={item}
+                      className="glass-chip px-4 py-1.5 font-label text-[13px] font-semibold text-mist transition-colors hover:border-ember/40 hover:text-paper"
+                    >
+                      {item}
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <h3 className="mt-6 font-display text-xl font-semibold leading-snug tracking-tight text-paper">
-                {c.title}
-              </h3>
-              <p className="mt-4 flex-1 text-[15px] leading-relaxed text-mist">{c.body}</p>
-              <p className="glass-rule mt-6 border-t pt-4 font-label text-[12px] font-semibold leading-snug text-paper/90">
-                {c.proof}
-              </p>
-              </div>
-            </Reveal>
-          ))}
-        </div>
+            ))}
+          </div>
+        </Reveal>
       </div>
     </section>
   );

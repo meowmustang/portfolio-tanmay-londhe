@@ -4,10 +4,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 
 const links = [
-  { id: "orbit", label: "ORBIT" },
-  { id: "solutions", label: "Case studies" },
+  { id: "work", label: "Work" },
   { id: "impact", label: "Impact" },
-  { id: "process", label: "Approach" },
+  { id: "approach", label: "Approach" },
+  { id: "capabilities", label: "Capabilities" },
   { id: "about", label: "About" },
 ];
 

@@ -13,8 +13,8 @@ export default function Portfolio() {
       <div className="wrap">
         <SectionHeading
           eyebrow="The wider portfolio"
-          title="Fifteen automations, one delivery tracker"
-          lede="Eight of these are written up as full case studies. The rest are listed because a transformation record is the portfolio, not the highlights. Hours are the tracker's own figures: annual volume multiplied by measured minutes saved per unit."
+          title="The full portfolio, from one delivery tracker"
+          lede="Fifteen automations live or in build, plus three more in design. Eight are written up as full case studies; the rest are listed because a transformation record is the whole portfolio, not the highlights. Hours are the tracker's own figures: annual volume multiplied by measured minutes saved per unit."
         />
 
         <Reveal className="mt-12">

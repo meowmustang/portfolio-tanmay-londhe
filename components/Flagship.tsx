@@ -76,7 +76,7 @@ export default function Flagship() {
                     Read the full case study →
                   </Link>
                   <Link
-                    href="/#solutions"
+                    href="/#work"
                     className="glass-chip focus-ring px-6 py-3 font-label text-sm font-semibold text-paper transition-colors hover:border-white/25"
                   >
                     See the other seven
