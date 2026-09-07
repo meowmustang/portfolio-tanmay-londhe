@@ -1,0 +1,295 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+
+  /* Glass surfaces are SMOKED, not white: a dark translucent fill over a
+     bright colour field. White fills would lift the panel above the
+     background and put body text below 4.5:1. The colour still reads
+     through at ~60%, and the lit edge supplies the glass highlight. */
+  --glass: rgba(10, 9, 14, 0.42);
+  --glass-strong: rgba(10, 9, 14, 0.32);
+  --glass-line: rgba(255, 255, 255, 0.11);
+  --glass-line-lit: rgba(255, 255, 255, 0.22);
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Anchored sections must clear the fixed header. */
+  scroll-padding-top: 5rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  @apply bg-ink text-paper font-body antialiased;
+  position: relative;
+}
+
+::selection { background: rgba(255, 132, 0, 0.28); color: #fff; }
+
+.eyebrow { @apply font-label text-[11px] font-semibold uppercase tracking-caps text-ember; }
+.wrap { @apply mx-auto w-full max-w-wrap px-5 sm:px-6 md:px-10; }
+.focus-ring { @apply focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ember; }
+
+/* --- Ambient colour field -------------------------------------------------
+   A blurred gradient photograph supplies the depth that the glass refracts.
+   Source: public/bg-field.webp, downscaled from an Unsplash original and
+   darkened to 46% brightness at build time — at full brightness the neon
+   magenta pushed body text under 4.5:1 and fought the ember accent.
+
+   A fixed-position layer rather than `background-attachment: fixed`, which
+   is unreliable on iOS. */
+
+.ambient {
+  position: fixed;
+  inset: 0;
+  z-index: -10;
+  pointer-events: none;
+  overflow: hidden;
+  background-color: #08080a;
+  /* Set inline by the layout via withBase(), so a project-site base path applies. */
+  background-image: var(--bg-field);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Ember wash, so the brand accent still anchors a mostly magenta-blue field. */
+.ambient::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(58% 40% at 50% -8%, rgba(255, 132, 0, 0.20), transparent 66%),
+    radial-gradient(40% 32% at 96% 8%, rgba(255, 170, 70, 0.12), transparent 68%);
+}
+
+/* Scrim: holds the darkest part of the field under the content column, so
+   text contrast never depends on which part of the gradient sits behind it. */
+.ambient::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(
+      120% 80% at 50% 38%,
+      rgba(8, 8, 10, 0.55),
+      rgba(8, 8, 10, 0.28) 55%,
+      rgba(8, 8, 10, 0.1) 100%
+    ),
+    linear-gradient(180deg, rgba(8, 8, 10, 0.35), transparent 22%),
+    /* Noise at very low alpha: cheap, static, and stops the gradient banding. */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+}
+
+/* Portrait viewports crop a 16:9 field hard, so bias toward the upper band
+   where the colour lives rather than the dark diagonal through the middle. */
+@media (max-aspect-ratio: 3 / 4) {
+  .ambient { background-position: 62% 22%; }
+}
+
+/* The grid texture, retained but softened now that colour carries the depth. */
+.hero-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.028) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.028) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(ellipse 80% 65% at 50% 20%, black 35%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 65% at 50% 20%, black 35%, transparent 100%);
+}
+
+@layer components {
+  /* --- Glass surfaces ----------------------------------------------------
+     `.glass` is the workhorse and carries NO backdrop blur, because a page
+     of blurred panels costs one GPU pass each. Blur is reserved for `.glass-lit`
+     and the header, where the panel actually sits over moving content. */
+
+  .glass {
+    position: relative;
+    background: var(--glass);
+    border: 1px solid var(--glass-line);
+    box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.07);
+    @apply rounded-2xl;
+  }
+
+  .glass-lit {
+    position: relative;
+    background: linear-gradient(
+      165deg,
+      rgba(14, 12, 20, 0.44),
+      rgba(9, 8, 13, 0.56) 55%,
+      rgba(9, 8, 13, 0.62)
+    );
+    backdrop-filter: blur(26px) saturate(150%);
+    -webkit-backdrop-filter: blur(26px) saturate(150%);
+    box-shadow:
+      0 24px 70px -30px rgba(0, 0, 0, 0.85),
+      inset 0 1px 0 0 rgba(255, 255, 255, 0.07);
+    @apply rounded-[1.75rem];
+  }
+
+  /* A lit top-left edge that fades away, the way light catches real glass.
+     Drawn as a masked gradient ring so the whole border is not uniform. */
+  .glass-lit::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      160deg,
+      var(--glass-line-lit),
+      rgba(255, 255, 255, 0.05) 38%,
+      rgba(255, 255, 255, 0) 68%
+    );
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Interactive panels: brighten the fill and the edge rather than moving far. */
+  .glass-hover {
+    transition:
+      background-color 0.3s ease,
+      border-color 0.3s ease,
+      transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.3s ease;
+  }
+  .glass-hover:hover,
+  .glass-hover:focus-within {
+    background: var(--glass-strong);
+    border-color: rgba(255, 132, 0, 0.34);
+    transform: translateY(-3px);
+    box-shadow: 0 22px 55px -28px rgba(0, 0, 0, 0.9);
+  }
+
+  .glass-chip {
+    background: var(--glass);
+    border: 1px solid var(--glass-line);
+    @apply rounded-full;
+  }
+
+  /* The left accent rule on a case card, growing on hover. */
+  .case-rule {
+    position: absolute;
+    left: 0;
+    top: 1.5rem;
+    bottom: 1.5rem;
+    width: 2px;
+    border-radius: 2px;
+    background: linear-gradient(to bottom, #ff8400, rgba(255, 132, 0, 0));
+    transform: scaleY(0.22);
+    transform-origin: top;
+    transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .group:hover .case-rule,
+  .group:focus-within .case-rule { transform: scaleY(1); }
+
+  /* Hairline dividers used inside glass, where a solid border reads too hard. */
+  .glass-rule { border-color: rgba(255, 255, 255, 0.08); }
+}
+
+/* --- Entrance animations -------------------------------------------------
+   The base state is always VISIBLE. Motion is layered on only after the
+   inline bootstrap script confirms JavaScript is running, so a blocked
+   script, a JS error, or a failed hydration never leaves the page blank.
+   A failsafe class forces everything visible if hydration never lands. */
+
+.reveal,
+.enter { opacity: 1; }
+
+.js .reveal {
+  opacity: 0;
+  transform: translateY(var(--reveal-y, 24px));
+  transition:
+    opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0s),
+    transform 0.7s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0s);
+  will-change: opacity, transform;
+}
+.js .reveal[data-visible="true"] {
+  opacity: 1;
+  transform: none;
+  will-change: auto;
+}
+
+/* Pure CSS, so above-the-fold content appears without waiting for React. */
+.js .enter {
+  animation: enter-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: var(--enter-delay, 0s);
+}
+@keyframes enter-up {
+  from { opacity: 0; transform: translateY(22px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Hydration never completed — show everything rather than hide it. */
+html.reveal-failsafe .reveal {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal { opacity: 1; transform: none; transition: none; }
+  .js .enter { animation: none; }
+}
+
+/* --- Nav, mobile sheet, lightbox -----------------------------------------
+   Small interactions in CSS so the whole page ships without a motion
+   library. Framer Motion cost 46 kB of the shared bundle for these alone. */
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.0625rem;
+  height: 1px;
+  background: #ff8400;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.nav-link[data-active="true"]::after { transform: scaleX(1); }
+
+.mobile-sheet { animation: sheet-open 0.25s ease-out both; overflow: hidden; }
+@keyframes sheet-open {
+  from { opacity: 0; max-height: 0; }
+  to   { opacity: 1; max-height: 30rem; }
+}
+
+.lightbox { animation: fade-in 0.2s ease-out both; }
+.lightbox-panel { animation: panel-in 0.25s cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes panel-in {
+  from { opacity: 0; transform: scale(0.94); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-link::after { transition: none; }
+  .mobile-sheet,
+  .lightbox,
+  .lightbox-panel { animation: none; }
+  .mobile-sheet { max-height: none; }
+  .glass-hover:hover { transform: none; }
+}
+
+/* Backdrop blur is expensive and, on some low-power devices, unsupported.
+   Fall back to an opaque-enough fill so text contrast is never at risk. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass-lit { background: rgba(13, 12, 18, 0.94); }
+  .nav-glass { background: rgba(8, 8, 10, 0.96); }
+  .glass { background: rgba(11, 10, 16, 0.9); }
+}
