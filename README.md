@@ -42,7 +42,7 @@ the canonical URL, Open Graph tags, JSON-LD, and the sitemap.
 
 ### Page structure
 
-Hero → Impact → Flagship (ORBIT) → Selected work (nine more case studies) → Full portfolio → How I think →
+Hero → Impact → Flagship (ORBIT) → Selected work (eight more case studies) → Full portfolio → How I think →
 Business × AI × Technology → About → Capabilities → Recognition → Contact.
 
 Evidence comes before self-description on purpose: a hiring manager reaches the work and the
@@ -107,8 +107,8 @@ claim is absent rather than softened:
 
 - **No TrackIt case study.** The project does not appear in this repository, the ORBIT
   documentation, or the delivery tracker. Provide the details and it can be added.
-- **RAG is absent from Capabilities.** No retrieval or vector layer exists in any project
-  (the BI Agent rejected one on purpose). "Tool-calling AI agents" is listed because the
+- **RAG is absent from Capabilities.** No retrieval or vector layer exists in any project.
+  "Tool-calling AI agents" is listed because the
   Sales Agent, a Claude tool-use loop over six Power BI tools, is in pilot on ORBIT.
 - **Only my own builds are listed.** Sales Agent is mine, built for a colleague on his API
   keys. Excel Consolidator, PowerBI MCP and Claude Usage Tracker are in the register but have
@@ -119,16 +119,20 @@ claim is absent rather than softened:
 ## Where the numbers come from
 
 `lib/portfolio.ts` mirrors the programme's evidence register (`Automations_VOMEET.xlsx`,
-evidence as at 12 Oct 2026), plus work started since (Collections Forecast, BI Agent). Each
+evidence as at 12 Oct 2026), plus Collections Forecast, which went live after it. Each
 row carries the register's verified stage and its hours-per-year estimate: annual volume
 multiplied by minutes saved per unit. **The minutes are estimates, never timed**, and the
 site labels hours as estimates for that reason.
 
 `portfolioTotals` is computed from the rows, not typed in, and reproduces the register's
-summary: 2,271 hours realised from deployed tools (731 of them on system-log volumes, 1,540
-on team-reported volumes) and 3,686 at full deployment, once the partly deployed and UAT
-tools are live. In-build work is excluded from both. If you change a row, the headline,
-footer, Impact notes and FTE figure all follow.
+summary. **The headline is the full-deployment figure, 3,686 hours ≈ 2.05 FTE** (once the
+partly deployed and UAT tools are live), with 2,271 from tools already deployed (731 of them
+on system-log volumes, 1,540 on team-reported volumes) shown alongside it. In-build work is
+excluded from both. If you change a row, the headline, footer, Impact notes and FTE figure
+all follow.
+
+Collections Forecast is used daily by the CFO, but executive use is deliberately not tracked,
+so it carries no run counts or hours.
 
 This replaced the September figure of 3,897 hours, which counted BulkPull (since renamed
 SFDC Data Exporter and moved back to UAT) as live and called the minutes "measured".

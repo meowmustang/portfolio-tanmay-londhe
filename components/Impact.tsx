@@ -34,8 +34,8 @@ export default function Impact() {
 
         <Reveal delay={0.1}>
           <p className="mt-6 max-w-3xl text-xs leading-relaxed text-mist">
-            {portfolioTotals.hoursPerYear.toLocaleString("en-IN")} hours a year is roughly{" "}
-            {portfolioTotals.fte.toFixed(1)} full-time people at{" "}
+            {portfolioTotals.fullDeploymentHours.toLocaleString("en-IN")} hours a year at full
+            deployment is roughly {portfolioTotals.fte.toFixed(2)} full-time people at{" "}
             {portfolioTotals.productiveHoursPerFte.toLocaleString("en-IN")} productive hours
             each. Ratios, counts, and cycle times rather than commercially sensitive figures.
             Each case study states the window a number was measured over, and says plainly

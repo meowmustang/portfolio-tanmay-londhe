@@ -108,10 +108,11 @@ export default function Portfolio() {
                 {portfolioTotals.inBuildCount} in build
               </p>
               <p className="font-label text-sm font-bold text-paper">
-                {portfolioTotals.hoursPerYear.toLocaleString("en-IN")} hours a year realised
+                {portfolioTotals.fullDeploymentHours.toLocaleString("en-IN")} hours a year at full
+                deployment
                 <span className="ml-2 font-semibold text-mist">
-                  ≈ {portfolioTotals.fte.toFixed(1)} full-time people ·{" "}
-                  {portfolioTotals.fullDeploymentHours.toLocaleString("en-IN")} at full deployment
+                  ≈ {portfolioTotals.fte.toFixed(2)} full-time people ·{" "}
+                  {portfolioTotals.realisedHours.toLocaleString("en-IN")} from deployed tools
                 </span>
               </p>
             </div>

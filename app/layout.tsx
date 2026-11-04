@@ -28,7 +28,7 @@ const manrope = Manrope({
 
 const title = "Tanmay Londhe — AI Transformation & Automation | Business Systems";
 const description =
-  "I turn business problems into AI-powered systems. Twenty AI and automation initiatives across finance, tax, payments, compliance and retail, releasing an estimated 2,271 hours of manual work a year. Ten full case studies from problem to measured impact.";
+  "I turn business problems into AI-powered systems. Nineteen AI and automation initiatives across finance, tax, payments, compliance and retail, releasing an estimated 3,686 hours of manual work a year. Nine full case studies from problem to measured impact.";
 
 /* site.url may carry a GitHub Pages sub-path, so asset URLs are built absolutely.
    A leading-slash path would resolve against the origin and drop the repo segment. */

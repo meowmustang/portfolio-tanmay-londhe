@@ -189,7 +189,7 @@ export const solutions: Solution[] = [
     slug: "collections-forecast",
     name: "Collections Forecast",
     category: "AI-Assisted Finance Analytics",
-    status: "Pilot · on ORBIT since Oct 2026",
+    status: "Live · used daily by the CFO",
     functions: "Finance · CRM · Collections",
     role: "Product owner — requirements, business rules, AI-assisted build, deployment",
     timeline: "Requirements 1 Oct → live on ORBIT 19 Oct 2026",
@@ -214,10 +214,10 @@ export const solutions: Solution[] = [
       "Waitress · IIS",
     ],
     headlineMetrics: [
-      { value: "18 days", label: "from requirements document to live on the platform" },
-      { value: "₹1", label: "reconciliation tolerance; beyond it the run fails" },
-      { value: "~13 s", label: "to import 49,091 billing lines" },
-      { value: "358", label: "automated test functions" },
+      { value: "Daily", label: "used by the CFO to read the month-wise collections outlook" },
+      { value: "Every morning", label: "fresh SAP and Salesforce data, with no manual pull" },
+      { value: "₹1", label: "reconciliation tolerance; a forecast that doesn't add back is never shown" },
+      { value: "Plain English", label: "questions answered, every figure traced to its source" },
     ],
     problem:
       "Leadership's question, how much will we collect next month, had no quick answer. It took a manual SAP extract, lookups against target-date and payment-term sheets, and Excel pivots prepared per tower. The process was slow, depended on one person, and was hard to repeat, so the number arrived late and could not be questioned further.",
@@ -278,12 +278,13 @@ export const solutions: Solution[] = [
       },
     ],
     impact: [
+      "Used daily by the CFO to read expected collections by month, project, and scheme, in place of a pivot that arrived late and could not be questioned.",
       "Live on ORBIT on 19 October 2026, eighteen days after the requirements document was written.",
       "Imports 49,091 billing lines in about 13 seconds and recalculates the full projection in about five.",
       "The reconciliation gate means a published forecast always adds back to its source. A projection that does not reconcile is never shown.",
       "Over 99 percent of SAP customers matched to their Salesforce records, so sold and unsold inventory sit in one view.",
       "Ask ORBIT's release gate is a 29-question evaluation set, including a prompt-injection case.",
-      "No hours are claimed. Time saved has not been measured, and the catalogue carries zero minutes per item until it is.",
+      "Executive use is not tracked, so no run counts or hours are quoted for it.",
     ],
     learned:
       "The definitions were harder than the dashboard. The requirements assumed a line with a billing date had been billed. The real data showed that SAP's billing dates on unbilled lines are placeholders, so billed and overdue status had to come from the debtors report instead. No amount of interface work would have surfaced that; only running the rules against real data did. That is why the reconciliation gate exists: a forecast that cannot add back to its source should never reach a CFO.",
@@ -885,101 +886,6 @@ export const solutions: Solution[] = [
     ],
     learned:
       "Data-model decisions are product decisions. The batch-merge rule encodes how the business actually thinks about stock, and getting it wrong would have made every downstream number wrong in a way no dashboard would have revealed.",
-  },
-  {
-    slug: "bi-agent",
-    name: "BI Agent",
-    category: "AI Agent · Business Intelligence",
-    status: "Test build · pilot next",
-    functions: "Leadership · Finance · Sales · Treasury",
-    role: "Product owner — requirements, groundwork, privacy design, AI-assisted build",
-    timeline: "Oct – Nov 2026 · v1 test build",
-    tagline:
-      "Plain-English questions answered from the live Power BI models, with the model, query, and refresh time shown behind every figure.",
-    focus: [
-      "Agentic AI",
-      "Tool design",
-      "Answer verification",
-      "Privacy engineering",
-      "Evaluation design",
-    ],
-    stack: [
-      "Python",
-      "Flask",
-      "Anthropic Claude API (tool use)",
-      "Power BI REST API",
-      "DAX",
-      "MSAL",
-      "XMLA / ADOMD.NET (groundwork)",
-      "pytest",
-    ],
-    headlineMetrics: [
-      { value: "7", label: "tools the agent can call, every one read-only" },
-      { value: "12,440", label: "columns scanned for personal data across 128 models" },
-      { value: "315", label: "real business questions catalogued to test against" },
-      { value: "37 / 37", label: "shortlisted models queryable over REST" },
-    ],
-    problem:
-      "Getting a number out of the organisation's Power BI estate meant knowing which report, page and filters held it, or asking the BI team. A question that cut across a report's layout needed a new visual. None of the shortlisted models carried descriptions and about eleven were copies of others, so even finding the right model took knowledge few people had.",
-    existingProcess: [
-      "Find the report that probably holds the figure, then the page, then the filters.",
-      "If no report answered the question as asked, request a new visual from the BI team and wait.",
-      "Leadership questions arrived as cross-cutting comparisons, which rarely matched any one report's layout.",
-      "Nothing recorded which model, query, or data refresh a quoted figure came from.",
-    ],
-    opportunity: [
-      "The questions are open-ended, but the answers must be exact DAX against unfamiliar models. That combination is the case for an agent that can explore a schema, rather than a fixed library of queries.",
-      "My earlier Sales Agent, built on a single sales model, had already shown that leadership would ask plain-English questions: 89 of them from four people in its first five weeks on ORBIT. The open question was generalising that safely across the estate, not whether there was demand.",
-      "The answers go to the CFO's office, so provenance and checking had to be properties of the code, not promises in a prompt.",
-      "Model metadata contains personal data, so masking had to happen before the model ever saw a name.",
-    ],
-    solution:
-      "An agent that answers business questions from the live Power BI models. Claude works in a tool-calling loop over seven read-only tools: open a model, search its schema, read its measures, list distinct values, run DAX, check data freshness, and project figures forward in Python. The code, not the model, records the model, query and refresh time behind every answer, and a verifier flags any number in the answer that no query returned.",
-    howItWorks: [
-      "Agent loop — Claude through the Anthropic SDK, at most ten tool rounds and five minutes per question, with a one-hour prompt cache and a fallback model.",
-      "Guardrails in the tools — queries must start with EVALUATE or DEFINE, write commands are blocked as a backstop, blocked columns are refused, each model is checked against the user's allowed list, and results are capped at 400 rows.",
-      "Knowledge without retrieval — each model's catalogue entry, exported schema, and the owner's notes are combined into one plain-text description and loaded whole. Vector search was rejected on purpose: DAX needs exact names, not similar ones.",
-      "Projections in code — the projection tool rejects any input figure that no query returned, so a forecast cannot start from an invented number.",
-      "Verification — the program records provenance, and a verifier checks every number in the answer against the returned figures, as returned or converted to crore, lakh, or a percentage.",
-      "Privacy — names become keyed codes before anything reaches the model and are swapped back inside the DAX and on screen. Contact and identity-number patterns are replaced, the agent fails closed until its name dictionary is fully built, and questions about protected traits are refused with the legal reason.",
-    ],
-    myRole: [
-      {
-        area: "Product definition",
-        detail: "Wrote the product requirements document, including the open decisions on naming, users, and model choice.",
-      },
-      {
-        area: "Groundwork",
-        detail: "Surveyed the estate: 123 models across 16 workspaces, a shortlist of 37, and REST query access confirmed on all 37.",
-      },
-      {
-        area: "Privacy",
-        detail:
-          "Ran a personal-data scan across 128 models and drew up the 430-column sensitivity list that decides what is coded, blocked, or reviewed.",
-      },
-      {
-        area: "Evaluation design",
-        detail:
-          "Catalogued 315 real questions by whether the data can answer them, and set up a model comparison to settle the model choice on evidence.",
-      },
-      {
-        area: "AI-assisted build",
-        detail: "Directed the build of the agent, its tools, and the verifier, reusing the masking method proven in Collections Forecast.",
-      },
-      {
-        area: "Pilot preparation",
-        detail: "Owns the ten pilot models: their notes, the column review, and the expected answers to test against.",
-      },
-    ],
-    impact: [
-      "Not yet in users' hands. This is a v1 test build running locally, with a pilot on ORBIT as the next phase, so no usage or time-saved figure is claimed.",
-      "The groundwork made the estate legible for the first time: 123 models surveyed, 37 shortlisted, and every shortlisted model confirmed queryable.",
-      "A personal-data scan of 12,440 columns across 128 models flagged 316 columns, which now decide what the agent may see, must code, or never touches.",
-      "A bank of 315 real business questions, graded by whether the data can answer them, gives the pilot a test set rather than a demo.",
-      "Masking is a shared component reused from Collections Forecast, rather than a promise each tool makes on its own.",
-    ],
-    learned:
-      "Facts a model writes can be wrong; facts the code records cannot. So citation, arithmetic, and number-checking all moved out of the prompt and into code: the agent chooses the query, but the program records where each figure came from and flags an answer whose numbers it cannot find. That is the line between an assistant leadership can try and one they can rely on.",
   },
 ];
 

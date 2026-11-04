@@ -40,11 +40,10 @@ export const automations: Automation[] = [
   { name: "FundFlow Agent", fn: "Finance · Treasury", status: "Partly deployed", hours: 375, evidence: "Team-reported", slug: "fundflow-agent" },
   { name: "SFDC Data Exporter", fn: "IT — Salesforce / CRM", status: "UAT", hours: 1040, evidence: "Team-reported" },
   { name: "Gift Voucher Manager", fn: "Payments · Retail", status: "UAT", hours: null, slug: "gv-hub" },
-  { name: "Collections Forecast", fn: "Finance · CRM", status: "Pilot", hours: null, slug: "collections-forecast" },
+  { name: "Collections Forecast", fn: "Finance · CRM", status: "Deployed", hours: null, slug: "collections-forecast" },
   { name: "Sales Agent", fn: "Sales · Leadership", status: "Pilot", hours: null },
   { name: "Pre-construction Tracker", fn: "Projects", status: "Pilot", hours: null },
   { name: "MeetNotes", fn: "All departments", status: "Pilot", hours: null },
-  { name: "BI Agent", fn: "Leadership · Finance", status: "In build", hours: null, slug: "bi-agent" },
   { name: "AccessWatch", fn: "IT — Business Apps", status: "In build", hours: 96 },
   { name: "ArchiveSort", fn: "Tax", status: "In build", hours: 60 },
 ];
@@ -55,12 +54,12 @@ const count = (s: Automation["status"]) => automations.filter((a) => a.status ==
 
 /**
  * Derived from the rows above so the headline cannot drift from them. These
- * reproduce the register's own summary: 2,271 realised, 731 of them on
- * system-log volumes, 3,686 at full deployment.
+ * reproduce the register's own summary: 3,686 at full deployment (the site's
+ * headline, 2.05 FTE), 2,271 from deployed tools, 731 of those on system-log volumes.
  */
 export const portfolioTotals = {
   /** Deployed tools only: the register's "realised" total. */
-  hoursPerYear: sum((a) => a.status === "Deployed"),
+  realisedHours: sum((a) => a.status === "Deployed"),
   logBackedHours: sum((a) => a.status === "Deployed" && a.evidence === "System log"),
   /** Adds the partly deployed and UAT tools once fully live. In-build work is excluded. */
   fullDeploymentHours: sum((a) => ["Deployed", "Partly deployed", "UAT"].includes(a.status)),
@@ -72,7 +71,11 @@ export const portfolioTotals = {
   inBuildCount: count("In build"),
   /** Four in design, one on hold at UAT; not listed by name. */
   alsoInDesign: 5,
+  /** Headline FTE, at full deployment. */
   get fte() {
-    return this.hoursPerYear / this.productiveHoursPerFte;
+    return this.fullDeploymentHours / this.productiveHoursPerFte;
+  },
+  get realisedFte() {
+    return this.realisedHours / this.productiveHoursPerFte;
   },
 };

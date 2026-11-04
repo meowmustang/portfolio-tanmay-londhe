@@ -31,7 +31,7 @@ export const positioning = {
 
 const t = portfolioTotals;
 const n = (x: number) => x.toLocaleString("en-IN");
-const fteTenths = Math.round(t.fte * 10);
+const fteHundredths = Math.round(t.fte * 100);
 
 /**
  * Every figure here traces to the evidence register mirrored in lib/portfolio.ts,
@@ -40,10 +40,10 @@ const fteTenths = Math.round(t.fte * 10);
  */
 export const impactStats = [
   {
-    value: t.hoursPerYear,
+    value: t.fullDeploymentHours,
     suffix: "",
     label: "Hours of manual work released per year",
-    note: `Deployed tools, annual volume × estimated minutes per unit. ${n(t.logBackedHours)} of them rest on system-log volumes; ${n(t.fullDeploymentHours)} at full deployment`,
+    note: `Estimated at full deployment: annual volume × estimated minutes per unit. ${n(t.realisedHours)} from tools already deployed, ${n(t.logBackedHours)} of those on system-log volumes`,
   },
   {
     value: automations.length,
@@ -70,10 +70,10 @@ export const impactStats = [
     note: "Across 490 recorded runs, 4 June to 12 October 2026, read from the platform's own usage log",
   },
   {
-    value: Math.floor(fteTenths / 10),
-    suffix: `.${fteTenths % 10} FTE`,
+    value: Math.floor(fteHundredths / 100),
+    suffix: `.${String(fteHundredths % 100).padStart(2, "0")} FTE`,
     label: "Of capacity returned to the business",
-    note: `${n(t.hoursPerYear)} hours a year at ${n(t.productiveHoursPerFte)} productive hours per person; ${(t.fullDeploymentHours / t.productiveHoursPerFte).toFixed(1)} at full deployment`,
+    note: `${n(t.fullDeploymentHours)} hours a year at ${n(t.productiveHoursPerFte)} productive hours per person, at full deployment; ${t.realisedFte.toFixed(1)} from tools already deployed`,
   },
 ];
 
@@ -203,7 +203,7 @@ export const journey = [
  *
  * Deliberately excluded, because the source material does not support them:
  * RAG and vector retrieval (no vector store or retrieval layer exists in any
- * project; the BI Agent rejected one on purpose). "Tool-calling AI agents" is
+ * project). "Tool-calling AI agents" is
  * backed by the Sales Agent: a Claude tool-use loop over six Power BI tools, in
  * pilot on ORBIT since 23 Sep 2026.
  */
