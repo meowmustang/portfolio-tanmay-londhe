@@ -188,19 +188,19 @@ export const solutions: Solution[] = [
   {
     slug: "collections-forecast",
     name: "Collections Forecast",
-    category: "AI-Assisted Finance Analytics",
+    category: "Cash-Flow Forecasting · AI Analytics",
     status: "Live · used daily by the CFO",
     functions: "Finance · CRM · Collections",
     role: "Product owner — requirements, business rules, AI-assisted build, deployment",
     timeline: "Requirements 1 Oct → live on ORBIT 19 Oct 2026",
     tagline:
-      "A month-wise forecast of customer cash inflow, with an assistant that answers in plain English and can show where every number came from.",
+      "A daily cash-inflow forecast for the CFO, built from SAP and Salesforce, with an AI analyst that answers open questions and proves every figure.",
     focus: [
-      "Rule engine design",
-      "Privacy-masked LLM",
-      "Answer verification",
-      "Data integration",
-      "Executive analytics",
+      "Cash-flow forecasting",
+      "LLM analytics",
+      "Privacy-masked AI",
+      "SAP + Salesforce integration",
+      "Executive decision support",
     ],
     stack: [
       "Python",
@@ -214,10 +214,10 @@ export const solutions: Solution[] = [
       "Waitress · IIS",
     ],
     headlineMetrics: [
-      { value: "Daily", label: "used by the CFO to read the month-wise collections outlook" },
-      { value: "Every morning", label: "fresh SAP and Salesforce data, with no manual pull" },
-      { value: "₹1", label: "reconciliation tolerance; a forecast that doesn't add back is never shown" },
-      { value: "Plain English", label: "questions answered, every figure traced to its source" },
+      { value: "Daily", label: "used by the CFO to read the month-wise cash-inflow forecast" },
+      { value: "49,091", label: "SAP billing lines turned into a month-wise forecast in seconds" },
+      { value: "AI analyst", label: "Claude plans and runs read-only SQL to answer open executive questions" },
+      { value: "Zero", label: "customer names sent to the AI; identities are masked before every call" },
     ],
     problem:
       "Leadership's question, how much will we collect next month, had no quick answer. It took a manual SAP extract, lookups against target-date and payment-term sheets, and Excel pivots prepared per tower. The process was slow, depended on one person, and was hard to repeat, so the number arrived late and could not be questioned further.",
