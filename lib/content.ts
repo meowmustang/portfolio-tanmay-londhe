@@ -1,3 +1,5 @@
+import { automations, portfolioTotals } from "./portfolio";
+
 export const site = {
   name: "Tanmay Londhe",
   role: "Senior Executive – Business Applications",
@@ -27,29 +29,33 @@ export const positioning = {
   secondaryCta: "Download resume",
 };
 
+const t = portfolioTotals;
+const n = (x: number) => x.toLocaleString("en-IN");
+const fteTenths = Math.round(t.fte * 10);
+
 /**
- * Every figure here traces to the internal delivery tracker mirrored in
- * lib/portfolio.ts, or to a case study that states its own measurement window.
- * Nothing is estimated in aggregate.
+ * Every figure here traces to the evidence register mirrored in lib/portfolio.ts,
+ * or to a case study that states its own measurement window. Hours are the
+ * register's annualised estimates and are labelled as estimates.
  */
 export const impactStats = [
   {
-    value: 3897,
+    value: t.hoursPerYear,
     suffix: "",
-    label: "Hours of manual work removed per year",
-    note: "Totalled per automation from real annual volumes and measured minutes per unit",
+    label: "Hours of manual work released per year",
+    note: `Deployed tools, annual volume × estimated minutes per unit. ${n(t.logBackedHours)} of them rest on system-log volumes; ${n(t.fullDeploymentHours)} at full deployment`,
   },
   {
-    value: 18,
+    value: automations.length,
     suffix: "",
     label: "AI and automation initiatives",
-    note: "Twelve live in production, three in build, three in design or on hold",
+    note: `${t.deployedCount} deployed, ${t.partlyDeployedCount} partly deployed, ${t.uatCount} in UAT, ${t.pilotCount} in pilot, ${t.inBuildCount} in build, plus ${t.alsoInDesign} in design or on hold`,
   },
   {
-    value: 9,
+    value: 10,
     suffix: "",
     label: "Business functions served",
-    note: "Finance, direct tax, tax, payments, cost control, CRM, receivables, retail, IT",
+    note: "Finance, treasury, direct tax, payments, cost control, CRM, receivables, retail, projects, IT",
   },
   {
     value: 26000,
@@ -58,16 +64,16 @@ export const impactStats = [
     note: "Roughly 6,500 per quarter, generated, secured, and distributed in-house",
   },
   {
-    value: 94339,
+    value: 95909,
     suffix: "",
     label: "Items processed by the ORBIT platform",
-    note: "Across 209 recorded runs in a three-month pilot, with zero run failures",
+    note: "Across 490 recorded runs, 4 June to 12 October 2026, read from the platform's own usage log",
   },
   {
-    value: 2,
-    suffix: ".2 FTE",
+    value: Math.floor(fteTenths / 10),
+    suffix: `.${fteTenths % 10} FTE`,
     label: "Of capacity returned to the business",
-    note: "3,897 hours a year at 1,800 productive hours per person",
+    note: `${n(t.hoursPerYear)} hours a year at ${n(t.productiveHoursPerFte)} productive hours per person; ${(t.fullDeploymentHours / t.productiveHoursPerFte).toFixed(1)} at full deployment`,
   },
 ];
 
@@ -150,7 +156,7 @@ export const about = {
   headline: "I sit at the intersection of business, technology and AI.",
   paragraphs: [
     "My work focuses on understanding how organisations operate, finding where technology can create meaningful leverage, and turning those opportunities into solutions that people actually use.",
-    "My experience spans enterprise workflows across Finance, Direct Tax, Payments, Cost Control, Receivables, CRM and Retail operations, with a focus on AI, automation, process redesign and implementation.",
+    "My experience spans enterprise workflows across Finance, Treasury, Direct Tax, Payments, Cost Control, Receivables, CRM, Retail and Projects, with a focus on AI, automation, process redesign and implementation.",
     "The common thread is ownership. I gather requirements from the people who run the process, size the opportunity before choosing a technology, build the system, run UAT on real data, and stay accountable through production until the impact can be stated as a number.",
   ],
 };
@@ -197,9 +203,9 @@ export const journey = [
  *
  * Deliberately excluded, because the source material does not support them:
  * RAG and vector retrieval (no vector store or retrieval layer exists in any
- * project), and "AI agents" as a shipped capability — an agentic rebuild is a
- * documented roadmap direction, and the LLM repair layer that exists today is
- * built but disabled. Add either only once there is a project behind it.
+ * project; the BI Agent rejected one on purpose). "Tool-calling AI agents" is
+ * backed by the Sales Agent: a Claude tool-use loop over six Power BI tools, in
+ * pilot on ORBIT since 23 Sep 2026.
  */
 export const capabilities = [
   {
@@ -210,6 +216,8 @@ export const capabilities = [
       "Prompt engineering",
       "Confidence-scored extraction",
       "Human-in-the-loop design",
+      "Privacy-masked hosted LLMs",
+      "Tool-calling AI agents",
       "AI opportunity assessment",
     ],
   },

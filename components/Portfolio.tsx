@@ -13,8 +13,8 @@ export default function Portfolio() {
       <div className="wrap">
         <SectionHeading
           eyebrow="The wider portfolio"
-          title="The full portfolio, from one delivery tracker"
-          lede="Fifteen automations live or in build, plus three more in design. Eight are written up as full case studies; the rest are listed because a transformation record is the whole portfolio, not the highlights. Hours are the tracker's own figures: annual volume multiplied by measured minutes saved per unit."
+          title="The full portfolio, from one evidence register"
+          lede={`${automations.length} initiatives from deployed to in build, plus ${portfolioTotals.alsoInDesign} more in design or on hold. ${automations.filter((a) => a.slug).length} are written up as full case studies; the rest are listed because a transformation record is the whole portfolio, not the highlights. Hours are the register's annualised estimates: annual volume multiplied by estimated minutes saved per unit. Only deployed tools count toward the realised total.`}
         />
 
         <Reveal className="mt-12">
@@ -65,7 +65,7 @@ export default function Portfolio() {
                     <p className="col-start-2 row-start-1 justify-self-end md:col-start-3 md:row-auto">
                       <span
                         className={`inline-block rounded-full border px-2.5 py-0.5 font-label text-[10px] font-semibold uppercase tracking-wider ${
-                          a.status === "Live"
+                          a.status === "Deployed" || a.status === "Partly deployed"
                             ? "border-ember/40 bg-ember/[0.12] text-ember"
                             : "border-white/[0.12] bg-white/[0.04] text-mist"
                         }`}
@@ -92,7 +92,7 @@ export default function Portfolio() {
                         </div>
                       ) : (
                         <span className="block text-[12px] text-mist md:text-right">
-                          not yet measured
+                          {a.hoursNote ?? "not yet measured"}
                         </span>
                       )}
                     </div>
@@ -103,13 +103,15 @@ export default function Portfolio() {
 
             <div className="flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.07] bg-white/[0.02] px-5 py-4 md:px-6">
               <p className="font-label text-[11px] font-semibold uppercase tracking-caps text-mist">
-                {portfolioTotals.liveCount} live · {portfolioTotals.inBuildCount} in build ·{" "}
-                {portfolioTotals.alsoInDesign} more in design
+                {portfolioTotals.deployedCount} deployed · {portfolioTotals.partlyDeployedCount} partly
+                deployed · {portfolioTotals.uatCount} in UAT · {portfolioTotals.pilotCount} in pilot ·{" "}
+                {portfolioTotals.inBuildCount} in build
               </p>
               <p className="font-label text-sm font-bold text-paper">
-                {portfolioTotals.hoursPerYear.toLocaleString("en-IN")} hours a year
+                {portfolioTotals.hoursPerYear.toLocaleString("en-IN")} hours a year realised
                 <span className="ml-2 font-semibold text-mist">
-                  ≈ {portfolioTotals.fte.toFixed(1)} full-time people
+                  ≈ {portfolioTotals.fte.toFixed(1)} full-time people ·{" "}
+                  {portfolioTotals.fullDeploymentHours.toLocaleString("en-IN")} at full deployment
                 </span>
               </p>
             </div>

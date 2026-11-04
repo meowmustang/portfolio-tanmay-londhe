@@ -11,7 +11,7 @@ const layers = [
   },
   {
     label: "Tools",
-    detail: "Seven isolated applications — own process, own dependencies, own screens",
+    detail: "Eleven isolated applications — own process, own dependencies, own screens",
     tone: "tools",
   },
   {
@@ -21,7 +21,7 @@ const layers = [
   },
   {
     label: "Foundation",
-    detail: "Enterprise SSO · on-premise host · local AI inference · no data egress",
+    detail: "Enterprise SSO · on-premise host · local AI inference",
     tone: "base",
   },
 ];
@@ -79,7 +79,7 @@ export default function Flagship() {
                     href="/#work"
                     className="glass-chip focus-ring px-6 py-3 font-label text-sm font-semibold text-paper transition-colors hover:border-white/25"
                   >
-                    See the other seven
+                    See the other case studies
                   </Link>
                 </div>
               </div>
@@ -103,7 +103,7 @@ export default function Flagship() {
                         <>
                           <p className="font-label text-[13px] font-bold text-paper">{l.label}</p>
                           <div className="mt-2.5 flex gap-1.5" aria-hidden="true">
-                            {Array.from({ length: 7 }).map((_, n) => (
+                            {Array.from({ length: 11 }).map((_, n) => (
                               <span
                                 key={n}
                                 className="h-6 flex-1 rounded-md border border-white/[0.09] bg-white/[0.03]"
@@ -129,9 +129,8 @@ export default function Flagship() {
                 </div>
                 <p className="mt-4 text-[12px] leading-relaxed text-mist">
                   A tool owns its logic and its screens. It owns nothing else. Adding one is a
-                  template copy and a single catalogue row — no portal change, no restart. The
-                  seventh joined a live platform that way, and the portal source never mentions
-                  it.
+                  template copy and a single catalogue row — no portal change, no restart. Five
+                  joined the live platform that way between September and October.
                 </p>
               </div>
             </div>
@@ -154,9 +153,8 @@ export default function Flagship() {
             ))}
           </dl>
           <p className="mt-4 text-xs leading-relaxed text-mist">
-            Platform-recorded figures from the pilot window, June to September 2026. Four of the
-            tools entered production in the final week of that period, so these totals describe
-            days rather than months.
+            Platform-recorded figures from ORBIT&apos;s usage log, 4 June to 12 October 2026.
+            The platform is still in pilot, ahead of company-wide release.
           </p>
         </Reveal>
       </div>

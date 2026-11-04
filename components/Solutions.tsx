@@ -12,7 +12,7 @@ export default function Solutions() {
       <div className="wrap">
         <SectionHeading
           eyebrow="Selected work"
-          title="Seven more systems, each with a number behind it"
+          title={`${rest.length} more systems, each with a number behind it`}
           lede="Each one taken from a business problem through the existing process, the opportunity, the build, and the measured outcome. Open any case study for the full narrative, including exactly what I did on it."
         />
         <div className="mt-12 grid gap-4 md:grid-cols-2">

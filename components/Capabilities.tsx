@@ -9,7 +9,7 @@ export default function Capabilities() {
         <SectionHeading
           eyebrow="Capabilities"
           title="Grouped by what they deliver"
-          lede="Every item here is behind at least one system in production. Retrieval-augmented generation and autonomous agents are deliberately absent: an agentic rebuild is a documented roadmap direction, not something I have shipped."
+          lede="Every item here is behind at least one system running on the production platform. Retrieval-augmented generation is deliberately absent, because no project has a retrieval layer."
         />
 
         <Reveal className="mt-12">

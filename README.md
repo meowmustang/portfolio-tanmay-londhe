@@ -36,13 +36,13 @@ the canonical URL, Open Graph tags, JSON-LD, and the sitemap.
 |---|---|
 | Positioning, impact metrics, how I think, capabilities, about, contact | `lib/content.ts` |
 | Case studies, one object each | `lib/solutions.ts` |
-| Automation roster and portfolio totals | `lib/portfolio.ts` |
+| Automation roster; totals are derived from it | `lib/portfolio.ts` |
 | Flagship homepage section | `components/Flagship.tsx` |
 | Section order | `app/page.tsx` |
 
 ### Page structure
 
-Hero → Impact → Flagship (ORBIT) → Selected work → Full portfolio → How I think →
+Hero → Impact → Flagship (ORBIT) → Selected work (nine more case studies) → Full portfolio → How I think →
 Business × AI × Technology → About → Capabilities → Recognition → Contact.
 
 Evidence comes before self-description on purpose: a hiring manager reaches the work and the
@@ -107,19 +107,35 @@ claim is absent rather than softened:
 
 - **No TrackIt case study.** The project does not appear in this repository, the ORBIT
   documentation, or the delivery tracker. Provide the details and it can be added.
-- **RAG and autonomous agents are absent from Capabilities.** No retrieval or vector layer
-  exists in any project, and the agentic rebuild is a documented roadmap direction rather
-  than shipped work. Add either only once a project stands behind it.
+- **RAG is absent from Capabilities.** No retrieval or vector layer exists in any project
+  (the BI Agent rejected one on purpose). "Tool-calling AI agents" is listed because the
+  Sales Agent, a Claude tool-use loop over six Power BI tools, is in pilot on ORBIT.
+- **Only my own builds are listed.** Sales Agent is mine, built for a colleague on his API
+  keys. Excel Consolidator, PowerBI MCP and Claude Usage Tracker are in the register but have
+  no source on this machine, so they stay out until confirmed.
 - **The About timeline carries stages, not dates.** Verified dates are not available.
-- Every hour figure traces to `lib/portfolio.ts`, which mirrors the delivery tracker.
+- Every hour figure traces to `lib/portfolio.ts`, which mirrors the evidence register.
 
 ## Where the numbers come from
 
-`lib/portfolio.ts` mirrors the internal delivery tracker: fifteen automations live or in
-build, each with the business function it serves and the tracker's own hours-per-year figure,
-which is annual volume multiplied by measured minutes saved per unit. The total of 3,897
-hours and the derived full-time-equivalent figure are the tracker's, not a re-estimate.
-Automations still in design or on hold are counted in the total but not listed by name.
+`lib/portfolio.ts` mirrors the programme's evidence register (`Automations_VOMEET.xlsx`,
+evidence as at 12 Oct 2026), plus work started since (Collections Forecast, BI Agent). Each
+row carries the register's verified stage and its hours-per-year estimate: annual volume
+multiplied by minutes saved per unit. **The minutes are estimates, never timed**, and the
+site labels hours as estimates for that reason.
+
+`portfolioTotals` is computed from the rows, not typed in, and reproduces the register's
+summary: 2,271 hours realised from deployed tools (731 of them on system-log volumes, 1,540
+on team-reported volumes) and 3,686 at full deployment, once the partly deployed and UAT
+tools are live. In-build work is excluded from both. If you change a row, the headline,
+footer, Impact notes and FTE figure all follow.
+
+This replaced the September figure of 3,897 hours, which counted BulkPull (since renamed
+SFDC Data Exporter and moved back to UAT) as live and called the minutes "measured".
+
+ORBIT's own dashboard "hours saved" is not used anywhere: it applies a catalogue rate per
+run and credits Tax Statement Converter 30 hours per run. ORBIT usage figures on the site
+(490 runs, 95,909 items, 4 Jun – 12 Oct 2026) are the register's reading of the usage log.
 
 Impact figures elsewhere are deliberately ratios, counts, and cycle times rather than
 anything commercially sensitive.
@@ -268,8 +284,8 @@ hydration-related. Both pages should report zero.
 | Email address — confirm this is the address you want public | `lib/content.ts` → `site.email` |
 | Resume PDF | `public/resume/Tanmay-Londhe-Resume.pdf` |
 | Site URL for a custom domain | `NEXT_PUBLIC_SITE_URL` |
-| Open Graph card — regenerate if the tagline changes | `public/og.png` |
-| Automation roster — regenerate when the tracker changes | `lib/portfolio.ts` |
+| Open Graph card — carries the hours and initiative count; regenerate when either changes | `public/og.png` |
+| Automation roster — update when the evidence register changes | `lib/portfolio.ts` |
 
 `assets-staging/` holds screenshots that were deliberately **not** published. See the README
 in that folder before moving anything into `public/`.

@@ -54,7 +54,7 @@ export const solutions: Solution[] = [
     functions: "Enterprise-wide · 11 departments",
     featured: true,
     role: "Platform owner — strategy, architecture, build, governance",
-    timeline: "Jun – Sep 2026 · pilot live",
+    timeline: "Jun 2026 – present · pilot live",
     tagline:
       "The platform that turned a drawer of desktop scripts into a governed, measured, self-service automation estate.",
     focus: [
@@ -78,10 +78,10 @@ export const solutions: Solution[] = [
       "IIS reverse proxy",
     ],
     headlineMetrics: [
-      { value: "165.9 hrs", label: "manual effort removed during the pilot window" },
-      { value: "94,339", label: "items processed across 209 recorded runs" },
-      { value: "Zero", label: "recorded run failures in the pilot" },
-      { value: "806", label: "automated tests across 40 suites" },
+      { value: "11", label: "tools on the platform, up from six in September" },
+      { value: "95,909", label: "items processed, 4 June to 12 October 2026" },
+      { value: "490", label: "recorded runs in that window, 310 of them scheduled" },
+      { value: "806", label: "automated tests across 40 suites at the September build" },
     ],
     problem:
       "The automation portfolio had become its own bottleneck. Every win shipped as a desktop script or a packaged executable living on one person's machine. Nobody could see what existed, request access, or run anything without finding its owner. Nothing was instrumented, so the one question leadership actually asked — what has this programme returned to the business — could only be answered by anecdote. Worse, the next automation cost as much to build as the last one, because nothing was shared.",
@@ -98,7 +98,7 @@ export const solutions: Solution[] = [
       "A hard no-data-egress requirement made on-premise AI inference the only route, which turned a constraint into a defensible design position.",
     ],
     solution:
-      "An on-premise web platform that consolidates an enterprise's finance, tax, and operations automations into one authenticated portal. It replaces scripts and packaged executables with self-service tools behind single sign-on, governed by role-based access, per-object ownership checks, a non-erasable audit trail, and usage instrumentation that reports work completed and manual effort removed per tool, per person, and per department. Six applications carrying 58,908 lines of Python and 806 automated tests at the September 2026 measurement, with a seventh since deployed.",
+      "An on-premise web platform that consolidates an enterprise's finance, tax, and operations automations into one authenticated portal. It replaces scripts and packaged executables with self-service tools behind single sign-on, governed by role-based access, per-object ownership checks, a non-erasable audit trail, and usage instrumentation that reports work completed and manual effort removed per tool, per person, and per department. Six applications carrying 58,908 lines of Python and 806 automated tests at the September 2026 measurement; by November the catalogue held eleven.",
     howItWorks: [
       "Shared contract — a real installed Python package of thirteen modules covering identity, background jobs, usage tracking, audit writing, alerting, rate limiting, redaction, and serving. A tool owns its business logic and its screens; it owns nothing else, so a security fix applies to every application at once.",
       "Process isolation over multi-tenancy — one operating-system process and one virtual environment per tool, so a four-minute OCR run, a ninety-thousand-row tax computation, and a voucher issue execute independently and pin their own dependency versions.",
@@ -106,7 +106,7 @@ export const solutions: Solution[] = [
       "Authorisation in layers — a three-tier role rank, then a per-tool assignment gate, then an object-level ownership check re-evaluated on every fetch. A revocation point means a demotion takes effect on the subject's next request rather than their next sign-in.",
       "Measurement as a first-class concern — every run writes to a usage log carrying the effort-saved multiplier at execution time, so correcting a catalogue value never rewrites history. Scheduled work is projected into the same log under a reserved non-human actor whose rows count toward work completed but never toward headcount.",
       "Executive reporting as a product surface — a weekly update view for an audience that will not open analytics filters, with totals summed live from the underlying rows so the number in front of management cannot drift from the data.",
-      "Extensibility as the design goal — adding a tool is a template copy plus a single catalogue row. No portal code change, no restart. The seventh application was added to the running platform this way, and the portal source does not reference it anywhere.",
+      "Extensibility as the design goal — adding a tool is a template copy plus a single catalogue row. No portal code change, no restart. Five applications joined the running platform this way between September and October, each through a registration script that writes its catalogue row.",
       "The local model stack carries a provenance inventory: every speech, alignment, diarisation, and language model recorded with its source, its licence, and its SHA-256 hash.",
     ],
     myRole: [
@@ -152,12 +152,12 @@ export const solutions: Solution[] = [
       },
     ],
     impact: [
-      "165.9 hours of manual effort removed and 94,339 items processed across 209 recorded runs during the pilot window, with zero recorded run failures and 195 privileged actions audited.",
+      "490 recorded runs and 95,909 items processed between 4 June and 12 October 2026, 310 of the runs by scheduled jobs and the rest by twelve named people.",
       "One three-minute run replaced two to three days of manual cross-verification on a 90,197-row tax computation, which is the clearest single demonstration of the scale change.",
       "Leadership can answer what the programme has returned from live data rather than anecdote, because measurement is a property of the platform.",
-      "The marginal cost of the next automation fell measurably, and it is demonstrated rather than claimed: the seventh application joined a live platform through a template copy and one catalogue row.",
+      "The marginal cost of the next automation fell measurably, and it is demonstrated rather than claimed: the catalogue went from six tools to eleven in two months, each joining a live platform through a template copy and one catalogue row.",
       "Error classes eliminated, not merely time saved — the reconciler surfaces a cancelled-but-paid condition the manual process had no mechanism to detect, and the extractor blocks automatic acceptance on critical fields.",
-      "Every AI capability runs on the organisation's own hardware. No document, transcript, or tax figure reaches an external inference service.",
+      "Certificate OCR and meeting transcription run their AI entirely on the organisation's own hardware, so no tax document or transcript reaches an external inference service.",
       "A seven-domain pre-go-live audit closed one critical, ten high, twenty-one medium, and thirteen low findings, each cited to a file and line before sign-off.",
     ],
     screens: [
@@ -184,6 +184,109 @@ export const solutions: Solution[] = [
     ],
     learned:
       "Build for the tenth automation and prove it with the first. A platform decision is only defensible if you can point at the moment the next build got cheaper, which means the second and third tools have to be nearly free. That is also why measurement has to be designed in: a programme that cannot state its own return will eventually be asked to justify itself with anecdote, and anecdote loses to a spreadsheet.",
+  },
+  {
+    slug: "collections-forecast",
+    name: "Collections Forecast",
+    category: "AI-Assisted Finance Analytics",
+    status: "Pilot · on ORBIT since Oct 2026",
+    functions: "Finance · CRM · Collections",
+    role: "Product owner — requirements, business rules, AI-assisted build, deployment",
+    timeline: "Requirements 1 Oct → live on ORBIT 19 Oct 2026",
+    tagline:
+      "A month-wise forecast of customer cash inflow, with an assistant that answers in plain English and can show where every number came from.",
+    focus: [
+      "Rule engine design",
+      "Privacy-masked LLM",
+      "Answer verification",
+      "Data integration",
+      "Executive analytics",
+    ],
+    stack: [
+      "Python",
+      "Flask",
+      "SQLAlchemy",
+      "SQLite",
+      "Anthropic Claude API",
+      "Salesforce REST API",
+      "RapidFuzz",
+      "ECharts",
+      "Waitress · IIS",
+    ],
+    headlineMetrics: [
+      { value: "18 days", label: "from requirements document to live on the platform" },
+      { value: "₹1", label: "reconciliation tolerance; beyond it the run fails" },
+      { value: "~13 s", label: "to import 49,091 billing lines" },
+      { value: "358", label: "automated test functions" },
+    ],
+    problem:
+      "Leadership's question, how much will we collect next month, had no quick answer. It took a manual SAP extract, lookups against target-date and payment-term sheets, and Excel pivots prepared per tower. The process was slow, depended on one person, and was hard to repeat, so the number arrived late and could not be questioned further.",
+    existingProcess: [
+      "An analyst pulled the SAP billing plan and the debtors report by hand.",
+      "Each line was looked up against target-date templates and payment-term sheets to decide when it would fall due.",
+      "Subvention deductions were worked out from separate bank workbooks.",
+      "Unsold inventory came from a separate Salesforce export, uploaded by hand.",
+      "The answer was a pivot table. A follow-up question meant starting again.",
+    ],
+    opportunity: [
+      "The projection itself is deterministic: instalment, scheme, milestone and target date decide when money falls due. That belongs in a rule engine, not a model.",
+      "The questions executives ask are open-ended, which fixed screens cannot anticipate. That is where a language model earns its place, as the interface and never as the calculator.",
+      "Both source systems already produced the data: SAP reports were landing each morning through ReportGenie, and Salesforce exposes an API.",
+      "Customer data could not go to an external model as it stood, so masking had to be a precondition of every call rather than a policy.",
+    ],
+    solution:
+      "A forecasting tool on the ORBIT platform. A rule engine projects every billing line into the month its cash is expected, nets advances, deducts subvention, and refuses to publish unless every category reconciles to the imported total within one rupee. A dashboard shows the result by month, project, scheme and milestone, with overdue ageing and drill-down to individual lines. Ask ORBIT, an assistant for executives, answers plain-English questions over the same data: known questions are answered by rules with no model call, and anything else is planned as read-only SQL by Claude, with customer identities masked before anything leaves the server and every figure in the answer traced to a result cell.",
+    howItWorks: [
+      "Ingest — SAP billing-plan and debtors files arrive each morning from ReportGenie or by upload. Salesforce projects, units and bookings sync daily over the REST API, replacing all three tables at once or not at all, and refusing an empty result.",
+      "Rule engine — due dates derived from the SAP payment-term text, billed and overdue status taken from the debtors open-items report, advances netted and subvention deducted. The run fails unless every category adds back to the imported total within ₹1.",
+      "Dashboard — KPI cards, a month chart, a scheme-by-month heat map, a project-by-month matrix with drill-down to lines, overdue ageing, upcoming milestones, and Excel export.",
+      "Ask ORBIT, rules first — a local parser with fuzzy matching answers known question shapes without calling a model.",
+      "Ask ORBIT, model second — two fixed calls to Claude: plan one to four read-only queries, then write the answer from the returned rows, with schema-forced JSON output. A bounded pipeline, deliberately not an open-ended agent loop.",
+      "Privacy — customer names, units, bookings and projects become keyed codes before any call, and a leak scan runs on every outgoing prompt.",
+      "SQL guard — queries run on a read-only connection restricted to views, with an authoriser, an allowed-function list, and a five-second limit.",
+      "Verification — each figure in an answer is read from the result cell it cites, and a sentence whose numbers match no cell is marked unverified.",
+      "Platform — ORBIT single sign-on, role-based access with the assistant limited to executive and admin roles, an audit log, and a daily per-user question limit.",
+    ],
+    myRole: [
+      {
+        area: "Requirements",
+        detail:
+          "Wrote the business requirements document: four user roles, the projection rules, and the open questions that needed sign-off.",
+      },
+      {
+        area: "Business rules",
+        detail:
+          "Supplied the projection and subvention rules and corrected them against real data, including rewriting the subvention rule a day after its first specification.",
+      },
+      {
+        area: "Solution design",
+        detail:
+          "Kept all arithmetic in the rule engine and confined the model to planning queries and wording answers, then designed the masking, SQL guard, and verification around it.",
+      },
+      {
+        area: "AI-assisted build",
+        detail:
+          "Directed the build through AI coding agents working from written specifications and plans, settling each design question as a numbered ruling.",
+      },
+      {
+        area: "Integration",
+        detail: "Set up the Salesforce connection and daily sync, and wired in the SAP feeds that ReportGenie already delivered.",
+      },
+      {
+        area: "Deployment",
+        detail: "Moved the tool onto ORBIT as a supervised service behind the platform's reverse proxy, with backups, approving each live step.",
+      },
+    ],
+    impact: [
+      "Live on ORBIT on 19 October 2026, eighteen days after the requirements document was written.",
+      "Imports 49,091 billing lines in about 13 seconds and recalculates the full projection in about five.",
+      "The reconciliation gate means a published forecast always adds back to its source. A projection that does not reconcile is never shown.",
+      "Over 99 percent of SAP customers matched to their Salesforce records, so sold and unsold inventory sit in one view.",
+      "Ask ORBIT's release gate is a 29-question evaluation set, including a prompt-injection case.",
+      "No hours are claimed. Time saved has not been measured, and the catalogue carries zero minutes per item until it is.",
+    ],
+    learned:
+      "The definitions were harder than the dashboard. The requirements assumed a line with a billing date had been billed. The real data showed that SAP's billing dates on unbilled lines are placeholders, so billed and overdue status had to come from the debtors report instead. No amount of interface work would have surfaced that; only running the rules against real data did. That is why the reconciliation gate exists: a forecast that cannot add back to its source should never reach a CFO.",
   },
   {
     slug: "tds-flow-engine",
@@ -271,34 +374,35 @@ export const solutions: Solution[] = [
   {
     slug: "fundflow-agent",
     name: "FundFlow Agent",
-    category: "AI + Finance Automation",
-    status: "Live in production",
-    functions: "Finance",
+    category: "Finance Automation",
+    status: "Partly deployed · runs daily on ORBIT",
+    functions: "Finance · Treasury",
     role: "Sole owner — discovery to production",
-    timeline: "Multi-phase · live daily",
+    timeline: "Multi-phase · ORBIT rebuild live since Sep 2026",
     tagline:
-      "An AI-enabled workflow that takes mutual fund statements from request to validated report without a person in the loop.",
+      "Mutual fund statements from inbox to a verified daily holdings report, without anyone re-keying a figure.",
     focus: [
-      "AI document extraction",
+      "Document extraction",
       "Workflow orchestration",
-      "Privacy-first design",
+      "Verification by design",
       "Error handling",
-      "Confidence scoring",
+      "Unattended operation",
     ],
     stack: [
-      "Power Automate",
       "Python",
-      "PaddleOCR",
-      "Regex parsing engines",
-      "Local LLM fallback",
-      "Excel / VBA",
+      "Flask",
+      "pdfplumber",
+      "pikepdf",
+      "Outlook COM",
+      "SQLite",
       "Task Scheduler",
+      "openpyxl",
     ],
     headlineMetrics: [
-      { value: "375 hrs", label: "of manual work removed per year" },
-      { value: "10", label: "institution layouts parsed" },
-      { value: "Zero", label: "extraction errors in validated runs" },
-      { value: "100%", label: "on-premise processing" },
+      { value: "375 hrs", label: "a year at full deployment, estimated" },
+      { value: "808", label: "statements read in the first five weeks on ORBIT" },
+      { value: "10", label: "fund-house layouts parsed, plus a generic parser" },
+      { value: "~3 min", label: "average daily run" },
     ],
     problem:
       "The finance team spent about ninety minutes of every working day requesting mutual fund statements, hunting for PDF attachments scattered across email threads, and keying investment and market values into a spreadsheet. Every folio arrived in a differently formatted document, so extraction was slow and error-prone, on records that feed treasury visibility and therefore have to be right.",
@@ -311,19 +415,19 @@ export const solutions: Solution[] = [
     ],
     opportunity: [
       "The request-and-collect half of the process was pure orchestration with no judgement in it, so it could be automated outright.",
-      "The extraction half was rule-governed per layout, but no rule set survives an unfamiliar layout. That gap is precisely where a language model earns its place, as a fallback rather than the primary path.",
-      "Because the output feeds treasury records, every extracted value needed provenance: which engine produced it and how confident it was.",
-      "Confidentiality ruled out cloud OCR and hosted AI entirely, which made local inference the only viable design.",
+      "The extraction half was rule-governed per layout, and ten known fund houses cover the folio list. Where a statement does not match, the right answer is to say so, not to guess.",
+      "Because the output feeds treasury records, every extracted value needed a stated status: verified, needs review, or failed.",
+      "Statements carry the organisation's holdings and arrive password-protected, so everything had to run on internal infrastructure, and the source PDFs could not be kept once read.",
     ],
     solution:
-      "An end-to-end pipeline that requests statements, collects the PDFs, extracts folio-level data with OCR and format-aware parsing, and produces validated Excel reports. Deterministic engines handle the ten known institution layouts. A locally hosted language model handles layouts the rules cannot read, behind the same strict validation. Every value carries a confidence score and a source flag showing whether rules or the AI fallback produced it.",
+      "A pipeline built in phases. Statement requests, receipt and filing run unattended each day. The extraction and reporting phase, rebuilt as an ORBIT tool in September 2026, reads the day's statements from the mailbox, values every folio on the list from its latest statement, and emails a results workbook, an errors workbook and a dashboard. Every row is marked verified, needs review, or failed, and none is ever a guess. The statements are deleted once the report has gone.",
     howItWorks: [
-      "Orchestration layer — scheduled workflows request statements from institutions, receive the replies, and file the PDFs into an organised per-institution folder structure automatically.",
-      "Scheduling and monitoring — a daily trigger runs the extractor, tracks status, and logs errors centrally.",
-      "Extraction engine — a Python executable callable from the command line or from Excel, which auto-identifies folios and extracts invested value, market value, and gain or loss.",
-      "Format-specific parsing engines for ten institution layouts, plus a generic heuristic parser for unknown formats, using an asymmetric folio-window technique to handle multi-scheme and multi-page statements.",
-      "Local LLM fallback — a strictly validated safety net for layouts the rules cannot parse, running entirely on-premise.",
-      "Provenance and audit — structured error states such as folio-not-found and zero-balance, per-value confidence scores and source flags, and a daily run-summary email forming a complete trail.",
+      "Orchestration — scheduled workflows request statements from fund houses, receive the replies, and file the PDFs, unattended.",
+      "Intake — a runner checks every five minutes whether the day's report is due, then reads PDF attachments, PDFs inside zip files and forwarded mails, opening each password-protected statement. A hash ledger means a PDF seen twice is processed once.",
+      "Extraction — each statement is parsed once, in parallel, by one of ten fund-house extractors chosen by detecting the issuer, with a generic parser behind them. Each folio is reported from its latest statement in the batch.",
+      "Verification — every row is marked verified, needs review, or failed. Nothing is filled in by inference.",
+      "Delivery — results, errors and a dashboard are emailed at the configured send time, then the batch is deleted. If the mail fails or the run crashes, the batch is kept and carried into the next run.",
+      "Control surface — an ORBIT screen holds the folio list, send time, recipients, a run-now button and an audit log, so the finance team changes configuration without touching a server.",
     ],
     myRole: [
       {
@@ -336,30 +440,29 @@ export const solutions: Solution[] = [
       },
       {
         area: "Solution design",
-        detail: "Chose the rules-first, AI-as-fallback ordering and the confidence-and-source model that makes the output auditable.",
+        detail: "Designed the phased rollout and the three verification states that make the output auditable.",
       },
       {
-        area: "AI implementation",
+        area: "Re-platforming",
         detail:
-          "Deployed and validated the local language model fallback, and constrained it behind the same validation as the deterministic path.",
+          "Rebuilt the extraction phase as an ORBIT tool: one parse per statement instead of one per folio, and a stated status on every row.",
       },
       { area: "Automation", detail: "Built the request, collection, filing, extraction, and reporting stages." },
       {
         area: "Testing & UAT",
         detail: "Rolled out in phases with user acceptance testing at each stage, stress-tested against large multi-folio datasets.",
       },
-      { area: "Deployment", detail: "Moved to daily unattended production with run summaries and central error logging." },
+      { area: "Deployment", detail: "Runs daily on ORBIT, with an alert email on any failed run." },
     ],
     impact: [
-      "375 hours of manual work removed per year, from about ninety minutes a day across 250 working days.",
-      "Zero extraction errors across validated production runs, stress-tested against large multi-folio datasets.",
-      "Folio coverage scales as configuration rather than as new manual work.",
-      "Complete audit trail through daily run summaries, per-value confidence scores, and source flags.",
-      "No sensitive financial document leaves the organisation's environment, including the AI layer.",
-      "Transcription errors in fund figures eliminated, and every request and receipt logged.",
+      "An estimated 375 hours a year at full deployment, from about ninety minutes a day across 250 working days. The register keeps these hours out of the realised total until the ORBIT phase is stable.",
+      "808 statements read across 23 daily reports from October to 3 November 2026, with an average run of about three minutes.",
+      "The folio list grew from 138 to 144 with no code change, because coverage is configuration rather than new manual work.",
+      "Every value is verified, flagged for review, or failed, so a finance user knows exactly which figures to check.",
+      "Re-keying of fund figures removed from the daily routine, and statement PDFs deleted once the report has gone.",
     ],
     learned:
-      "Deterministic rules should carry the load and AI should be the validated exception path. Reversing that ordering is how document automation becomes something people quietly stop trusting. The confidence score and the source flag matter as much as the extraction itself, because they tell a finance user exactly which numbers to check.",
+      "The rebuild removed a defect the old version had carried quietly: parsing a statement once per folio could report a stale value. Parse each document once and report each folio from its latest statement, and that whole class of error disappears. The same discipline runs through the verification states: a row the system cannot read with certainty is shown to a person as exactly that, never filled in by something cleverer.",
   },
   {
     slug: "tds-certificate-ocr",
@@ -387,8 +490,8 @@ export const solutions: Solution[] = [
       "Automated email alerts",
     ],
     headlineMetrics: [
-      { value: "300 hrs", label: "of manual work removed per year" },
-      { value: "3,000", label: "certificates processed a year" },
+      { value: "245 hrs", label: "of manual work removed per year, estimated" },
+      { value: "~10,000", label: "certificates a year, from the usage log" },
       { value: "Offline", label: "AI extraction layer" },
       { value: "Zero", label: "unverified values posted" },
     ],
@@ -399,7 +502,7 @@ export const solutions: Solution[] = [
       "A person opened each document, read more than fifteen fields by eye, and typed them into the enterprise system.",
       "Bundled scans had to be split by hand, and two similar certificate types had to be told apart by eye.",
       "There was no duplicate check, so the same credit could be applied twice or against the wrong customer ledger.",
-      "Volume was continuous rather than seasonal, making this a permanent daily load of about 3,000 certificates a year.",
+      "Volume was continuous rather than seasonal, making this a permanent daily load that the usage log now puts at about 10,000 certificates a year.",
     ],
     opportunity: [
       "Format could never be standardised at source, which rules out a rules-only approach and makes this a genuine AI problem rather than a scripting one.",
@@ -408,13 +511,13 @@ export const solutions: Solution[] = [
       "No external OCR or AI service was acceptable for these documents, so the AI layer had to run offline.",
     ],
     solution:
-      "An intelligent document-processing platform that splits bundled scans, classifies certificate types, extracts more than fifteen fields with per-field confidence scoring, detects duplicates against the register of processed references, and falls back to a fully offline local language model for layouts the rules cannot parse. Every run emits audit-ready outputs.",
+      "An intelligent document-processing platform that splits bundled scans, classifies certificate types, extracts more than fifteen fields with per-field confidence scoring, detects duplicates against the register of processed references, and carries a fully offline local language-model fallback for layouts the rules cannot parse, built and held disabled in production. Every run emits audit-ready outputs.",
     howItWorks: [
       "OCR layer — text extraction with smart grouping and page detection to segment bundled documents into individual certificates.",
       "Classification — automatic detection of certificate type before field extraction begins.",
       "Extraction and validation — rule-based field extraction with per-field confidence scores. Low-confidence or missing fields are flagged for human review rather than silently accepted.",
       "Duplicate detection against the register of previously processed references, catching repeats before they reach a ledger.",
-      "Offline AI fallback — a locally hosted small language model handles layouts the rules cannot parse, with its output passed through the same strict validation as everything else.",
+      "Offline AI fallback — a locally hosted small language model for layouts the rules cannot parse, with its output passed through the same strict validation as everything else. Built, and switched off in production until it is needed.",
       "Audit outputs — every run emits a summary workbook, an error workbook, and a full log, emailed automatically to stakeholders. Failed documents stay in place for safe retry.",
     ],
     myRole: [
@@ -441,8 +544,8 @@ export const solutions: Solution[] = [
       { area: "Deployment", detail: "Runs daily in production with proactive failure alerting and retry-safe design." },
     ],
     impact: [
-      "300 hours of manual work removed per year, from about 3,000 certificates at roughly six minutes each.",
-      "Over a thousand certificates processed cumulatively at the last count, with monitored daily runs regularly completing clean.",
+      "An estimated 245 hours of manual work removed per year, from about 10,000 certificates at 1.47 minutes each. The per-certificate time has not been timed; at six minutes the figure would be about 1,000 hours.",
+      "3,612 certificates processed on ORBIT between 4 June and 12 October 2026, read from the platform's usage log.",
       "Duplicate and mismatch detection prevents the same credit being applied twice or against the wrong customer ledger, which is a direct control over receivables accuracy.",
       "Uncertain values are routed to a person rather than posted, so bad data does not reach finance records.",
       "Full auditability: summary, exceptions, and logs delivered to stakeholders on every run.",
@@ -456,7 +559,7 @@ export const solutions: Solution[] = [
     name: "ReportGenie",
     category: "Enterprise Reporting Automation",
     status: "Live in production",
-    functions: "All departments",
+    functions: "Finance",
     role: "Sole owner — discovery to production",
     timeline: "Live · multi-department roadmap",
     tagline: "A config-driven reporting engine where adding a new report is data entry, not a code change.",
@@ -694,10 +797,10 @@ export const solutions: Solution[] = [
     slug: "gv-hub",
     name: "GV Hub",
     category: "Enterprise Application Development",
-    status: "Design / build · working core live",
+    status: "UAT · on ORBIT since Aug 2026",
     functions: "Payments · Accounts Receivable · Retail operations",
     role: "Product owner and builder",
-    timeline: "Design / build · core live",
+    timeline: "Prototype → web application → ORBIT tool",
     tagline: "From spreadsheets to a real platform: voucher inventory, approvals, and expiry intelligence in one system.",
     focus: [
       "Product thinking",
@@ -706,7 +809,7 @@ export const solutions: Solution[] = [
       "Multi-role access design",
       "Dashboarding",
     ],
-    stack: ["Power Apps", "Power Automate", "SharePoint", "Workflow & approval design", "Dashboard design"],
+    stack: ["Python", "Flask", "SQLAlchemy", "APScheduler", "ORBIT single sign-on", "Workflow & approval design"],
     headlineMetrics: [
       { value: "6", label: "modules in the platform" },
       { value: "Serial-level", label: "inventory traceability" },
@@ -782,6 +885,101 @@ export const solutions: Solution[] = [
     ],
     learned:
       "Data-model decisions are product decisions. The batch-merge rule encodes how the business actually thinks about stock, and getting it wrong would have made every downstream number wrong in a way no dashboard would have revealed.",
+  },
+  {
+    slug: "bi-agent",
+    name: "BI Agent",
+    category: "AI Agent · Business Intelligence",
+    status: "Test build · pilot next",
+    functions: "Leadership · Finance · Sales · Treasury",
+    role: "Product owner — requirements, groundwork, privacy design, AI-assisted build",
+    timeline: "Oct – Nov 2026 · v1 test build",
+    tagline:
+      "Plain-English questions answered from the live Power BI models, with the model, query, and refresh time shown behind every figure.",
+    focus: [
+      "Agentic AI",
+      "Tool design",
+      "Answer verification",
+      "Privacy engineering",
+      "Evaluation design",
+    ],
+    stack: [
+      "Python",
+      "Flask",
+      "Anthropic Claude API (tool use)",
+      "Power BI REST API",
+      "DAX",
+      "MSAL",
+      "XMLA / ADOMD.NET (groundwork)",
+      "pytest",
+    ],
+    headlineMetrics: [
+      { value: "7", label: "tools the agent can call, every one read-only" },
+      { value: "12,440", label: "columns scanned for personal data across 128 models" },
+      { value: "315", label: "real business questions catalogued to test against" },
+      { value: "37 / 37", label: "shortlisted models queryable over REST" },
+    ],
+    problem:
+      "Getting a number out of the organisation's Power BI estate meant knowing which report, page and filters held it, or asking the BI team. A question that cut across a report's layout needed a new visual. None of the shortlisted models carried descriptions and about eleven were copies of others, so even finding the right model took knowledge few people had.",
+    existingProcess: [
+      "Find the report that probably holds the figure, then the page, then the filters.",
+      "If no report answered the question as asked, request a new visual from the BI team and wait.",
+      "Leadership questions arrived as cross-cutting comparisons, which rarely matched any one report's layout.",
+      "Nothing recorded which model, query, or data refresh a quoted figure came from.",
+    ],
+    opportunity: [
+      "The questions are open-ended, but the answers must be exact DAX against unfamiliar models. That combination is the case for an agent that can explore a schema, rather than a fixed library of queries.",
+      "My earlier Sales Agent, built on a single sales model, had already shown that leadership would ask plain-English questions: 89 of them from four people in its first five weeks on ORBIT. The open question was generalising that safely across the estate, not whether there was demand.",
+      "The answers go to the CFO's office, so provenance and checking had to be properties of the code, not promises in a prompt.",
+      "Model metadata contains personal data, so masking had to happen before the model ever saw a name.",
+    ],
+    solution:
+      "An agent that answers business questions from the live Power BI models. Claude works in a tool-calling loop over seven read-only tools: open a model, search its schema, read its measures, list distinct values, run DAX, check data freshness, and project figures forward in Python. The code, not the model, records the model, query and refresh time behind every answer, and a verifier flags any number in the answer that no query returned.",
+    howItWorks: [
+      "Agent loop — Claude through the Anthropic SDK, at most ten tool rounds and five minutes per question, with a one-hour prompt cache and a fallback model.",
+      "Guardrails in the tools — queries must start with EVALUATE or DEFINE, write commands are blocked as a backstop, blocked columns are refused, each model is checked against the user's allowed list, and results are capped at 400 rows.",
+      "Knowledge without retrieval — each model's catalogue entry, exported schema, and the owner's notes are combined into one plain-text description and loaded whole. Vector search was rejected on purpose: DAX needs exact names, not similar ones.",
+      "Projections in code — the projection tool rejects any input figure that no query returned, so a forecast cannot start from an invented number.",
+      "Verification — the program records provenance, and a verifier checks every number in the answer against the returned figures, as returned or converted to crore, lakh, or a percentage.",
+      "Privacy — names become keyed codes before anything reaches the model and are swapped back inside the DAX and on screen. Contact and identity-number patterns are replaced, the agent fails closed until its name dictionary is fully built, and questions about protected traits are refused with the legal reason.",
+    ],
+    myRole: [
+      {
+        area: "Product definition",
+        detail: "Wrote the product requirements document, including the open decisions on naming, users, and model choice.",
+      },
+      {
+        area: "Groundwork",
+        detail: "Surveyed the estate: 123 models across 16 workspaces, a shortlist of 37, and REST query access confirmed on all 37.",
+      },
+      {
+        area: "Privacy",
+        detail:
+          "Ran a personal-data scan across 128 models and drew up the 430-column sensitivity list that decides what is coded, blocked, or reviewed.",
+      },
+      {
+        area: "Evaluation design",
+        detail:
+          "Catalogued 315 real questions by whether the data can answer them, and set up a model comparison to settle the model choice on evidence.",
+      },
+      {
+        area: "AI-assisted build",
+        detail: "Directed the build of the agent, its tools, and the verifier, reusing the masking method proven in Collections Forecast.",
+      },
+      {
+        area: "Pilot preparation",
+        detail: "Owns the ten pilot models: their notes, the column review, and the expected answers to test against.",
+      },
+    ],
+    impact: [
+      "Not yet in users' hands. This is a v1 test build running locally, with a pilot on ORBIT as the next phase, so no usage or time-saved figure is claimed.",
+      "The groundwork made the estate legible for the first time: 123 models surveyed, 37 shortlisted, and every shortlisted model confirmed queryable.",
+      "A personal-data scan of 12,440 columns across 128 models flagged 316 columns, which now decide what the agent may see, must code, or never touches.",
+      "A bank of 315 real business questions, graded by whether the data can answer them, gives the pilot a test set rather than a demo.",
+      "Masking is a shared component reused from Collections Forecast, rather than a promise each tool makes on its own.",
+    ],
+    learned:
+      "Facts a model writes can be wrong; facts the code records cannot. So citation, arithmetic, and number-checking all moved out of the prompt and into code: the agent chooses the query, but the program records where each figure came from and flags an answer whose numbers it cannot find. That is the line between an assistant leadership can try and one they can rely on.",
   },
 ];
 
